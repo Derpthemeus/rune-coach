@@ -45,8 +45,8 @@ public class SummonerAccountIdUpdaterSupervisor extends PopulatorThreadSuperviso
 			}
 
 			try (Session session = getSessionFactory().openSession()) {
-				// TODO lock results?
-				Query query = session.createQuery("FROM SummonerEntity WHERE accountId=null AND summonerId NOT IN :activeSummonerIds ORDER BY leagueLastUpdated").setParameter("activeSummonerIds", activeSummonerIds);
+				Query query = session.createQuery("FROM SummonerEntity WHERE accountId=null AND summonerId NOT IN :activeSummonerIds ORDER BY leagueLastUpdated")
+						.setParameter("activeSummonerIds", activeSummonerIds);
 				// TODO pick max results, and update dynamically based on thread count?
 				List<SummonerEntity> summoners = query.setMaxResults(50).getResultList();
 				summonersToCheck.addAll(summoners);
@@ -57,6 +57,4 @@ public class SummonerAccountIdUpdaterSupervisor extends PopulatorThreadSuperviso
 		}
 		return summonersToCheck.remove();
 	}
-
-
 }

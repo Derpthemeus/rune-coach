@@ -8,6 +8,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.LockModeType;
+
 
 /**
  * Sets the `account_id` field for summoners in the database that have not had it set yet.
@@ -18,10 +20,11 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
-		summonerEntity = getSupervisor().getSummonerToUpdate();
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
+			summonerEntity = getSupervisor().getSummonerToUpdate();
+			session.lock(summonerEntity, LockModeType.PESSIMISTIC_WRITE);
 
 			getSupervisor().getL4j8().getSummonerAPI().getSummonerById(Platform.NA1, summonerEntity.getSummonerId());
 			summonerEntity.setAccountId(summonerEntity.getAccountId());

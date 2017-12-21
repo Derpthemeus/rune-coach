@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import javax.persistence.LockModeType;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -28,14 +29,21 @@ public class SummonerFinderThread extends PopulatorThread {
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
-
 			leagueEntity = getSupervisor().getLeagueToCheck();
+			session.load(leagueEntity, leagueEntity.getUuid());
+			session.lock(leagueEntity, LockModeType.PESSIMISTIC_WRITE);
+
 			LeagueList league = getSupervisor().getL4j8().getLeagueAPI().getLeague(Platform.NA1, leagueEntity.getUuid());
 			List<Long> summonerIds = league.getEntries().stream().map(LeagueItem::getSummonerId).collect(Collectors.toList());
 
 			// Get all summoners in the league that are already in the database
-			Query query = session.createQuery("FROM SummonerEntity WHERE summonerId IN (:summonerIds)").setParameter("summonerIds", summonerIds);
+			// TODO why doesn't setLockMode work on this? (causes deadlock errors)
+			Query query = session.createQuery("FROM SummonerEntity WHERE summonerId IN (:summonerIds)")
+					.setParameter("summonerIds", summonerIds);
 			List<SummonerEntity> summonerEntities = query.getResultList();
+			for (SummonerEntity entity : summonerEntities) {
+				session.lock(entity, LockModeType.PESSIMISTIC_WRITE);
+			}
 
 			for (SummonerEntity summonerEntity : summonerEntities) {
 				summonerEntity.setLeagueLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -65,6 +73,7 @@ public class SummonerFinderThread extends PopulatorThread {
 			}
 			handleException(ex);
 		}
+		leagueEntity = null;
 	}
 
 	public LeagueEntity getActiveLeague() {

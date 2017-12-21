@@ -26,11 +26,13 @@ public class MatchDownloaderThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
-		matchEntity = getSupervisor().getMatchToDownload();
-
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
+
+			matchEntity = getSupervisor().getMatchToDownload();
+			session.load(matchEntity, matchEntity.getMatchId());
+			session.lock(matchEntity, LockModeType.PESSIMISTIC_WRITE);
 
 			Match match = getSupervisor().getL4j8().getMatchAPI().getMatch(Platform.NA1, matchEntity.getMatchId());
 
@@ -64,7 +66,8 @@ public class MatchDownloaderThread extends PopulatorThread {
 
 			// Track the summoners in the match (if they haven't been tracked already)
 			for (ParticipantIdentity identity : match.getParticipantIdentities()) {
-				Query summonerQuery = session.createQuery("FROM SummonerEntity WHERE summonerId = :summonerId").setParameter("summonerId", identity.getPlayer().getSummonerId()).setLockMode(LockModeType.PESSIMISTIC_READ);
+				Query summonerQuery = session.createQuery("FROM SummonerEntity WHERE summonerId = :summonerId")
+						.setParameter("summonerId", identity.getPlayer().getSummonerId());
 
 				// Skip the summoner if they are already tracked
 				if (summonerQuery.uniqueResult() != null) {

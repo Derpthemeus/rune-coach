@@ -8,6 +8,7 @@ import no.stelar7.api.l4j8.basic.constants.api.Platform;
 import no.stelar7.api.l4j8.basic.constants.types.GameQueueType;
 import no.stelar7.api.l4j8.pojo.league.LeaguePosition;
 import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -29,17 +30,21 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
 			summoner = getSupervisor().getSummonerToUpdate();
+			session.load(summoner, summoner.getSummonerId());
+			session.lock(summoner, LockMode.PESSIMISTIC_WRITE);
 
 			List<LeaguePosition> leaguePositions = getSupervisor().getL4j8().getLeagueAPI().getLeaguePosition(Platform.NA1, summoner.getSummonerId());
 
 			for (LeaguePosition position : leaguePositions) {
 				if (position.getQueueType() == GameQueueType.RANKED_SOLO_5X5) {
 					// Track the league, if it isn't already tracked
-					Query leagueQuery = session.createQuery("FROM LeagueEntity WHERE uuid = :leagueId").setParameter("leagueId", position.getLeagueId());
+					Query leagueQuery = session.createQuery("FROM LeagueEntity WHERE uuid = :leagueId")
+							.setParameter("leagueId", position.getLeagueId());
 					if (leagueQuery.uniqueResult() == null) {
 						LeagueEntity leagueEntity = new LeagueEntity();
 						leagueEntity.setUuid(position.getLeagueId());
 						leagueEntity.setLastChecked(new Timestamp(0));
+
 						session.save(leagueEntity);
 					}
 

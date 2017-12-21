@@ -48,7 +48,7 @@ public class SummonerFinderSupervisor extends PopulatorThreadSupervisor<Summoner
 			try (Session session = getSessionFactory().openSession()) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DATE, -2);
-				// TODO lock results?
+
 				Query query = session.createQuery("FROM LeagueEntity WHERE lastChecked < :cutoffDate AND uuid NOT IN :activeLeagueIds ORDER BY lastChecked ASC")
 						.setParameter("cutoffDate", new Time(calendar.getTimeInMillis())).setParameter("activeLeagueIds", activeLeagueIds);
 				// TODO pick max results, and update dynamically based on thread count?

@@ -46,9 +46,8 @@ public class MatchDownloaderSupervisor extends PopulatorThreadSupervisor<MatchDo
 			}
 
 			try (Session session = getSessionFactory().openSession()) {
-				// TODO lock results?
-				Query query = session.createQuery("FROM MatchEntity WHERE hasBeenDownloaded=false AND matchId NOT IN :activeMatchIds").setParameter("activeMatchIds", activeMatchIds);
-
+				Query query = session.createQuery("FROM MatchEntity WHERE hasBeenDownloaded=false AND matchId NOT IN :activeMatchIds")
+						.setParameter("activeMatchIds", activeMatchIds);
 				// TODO pick max results, and update dynamically based on thread count?
 				List<MatchEntity> matches = query.setMaxResults(200).getResultList();
 				matchesToDownload.addAll(matches);

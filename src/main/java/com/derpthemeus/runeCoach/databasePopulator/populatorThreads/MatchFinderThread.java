@@ -32,10 +32,12 @@ public class MatchFinderThread extends PopulatorThread {
 		Calendar matchCutoffDate = Calendar.getInstance();
 		matchCutoffDate.add(Calendar.DATE, -15);
 
-		summoner = getSupervisor().getSummonerToCheck();
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
+			summoner = getSupervisor().getSummonerToCheck();
+			session.load(summoner, summoner.getSummonerId());
+			session.lock(summoner, LockModeType.PESSIMISTIC_WRITE);
 
 			List<MatchReference> matchList = getSupervisor().getL4j8().getMatchAPI().getMatchList(Platform.NA1, summoner.getAccountId(), null, null, null, null, QUEUES, null, null);
 			for (MatchReference reference : matchList) {
@@ -48,7 +50,8 @@ public class MatchFinderThread extends PopulatorThread {
 					break;
 				}
 
-				Query query = session.createQuery("FROM MatchEntity WHERE matchId = :matchId").setParameter("matchId", reference.getGameId()).setLockMode(LockModeType.PESSIMISTIC_READ);
+				Query query = session.createQuery("FROM MatchEntity WHERE matchId = :matchId")
+						.setParameter("matchId", reference.getGameId());
 
 				// Skip the match if it has already be tracked
 				if (query.uniqueResult() != null) {
@@ -67,7 +70,8 @@ public class MatchFinderThread extends PopulatorThread {
 				summoner.setLastMatchTimestamp(new Timestamp(matchList.get(0).getTimestamp()));
 			}
 			summoner.setMatchesLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-
+			
+			session.update(summoner);
 			tx.commit();
 		} catch (Exception ex) {
 			if (tx != null) {

@@ -52,7 +52,6 @@ public class MatchFinderSupervisor extends PopulatorThreadSupervisor<MatchFinder
 				// TODO pick update cutoff range
 				calendar.add(Calendar.DATE, -3);
 
-				// TODO lock results?
 				Query query = session.createQuery("FROM SummonerEntity WHERE accountId != null AND matchesLastUpdated < :cutoffDate AND summonerId NOT IN :activeSummonerIds ORDER BY matchesLastUpdated ASC")
 						.setParameter("cutoffDate", new Time(calendar.getTimeInMillis())).setParameter("activeSummonerIds", activeSummonerIds);
 				// TODO pick max results, and update dynamically based on thread count?
