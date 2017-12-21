@@ -53,7 +53,7 @@ public class SummonerLeagueUpdaterSupervisor extends PopulatorThreadSupervisor<S
 				calendar.add(Calendar.DATE, -3);
 				Timestamp cutoffDate = new Timestamp(calendar.getTimeInMillis());
 
-				Query query = session.createQuery("FROM SummonerEntity WHERE (league=null OR leagueLastUpdated < :cutoffDate) AND summonerId NOT IN :activeSummonerIds ORDER BY leagueLastUpdated")
+				Query query = session.createQuery("FROM SummonerEntity WHERE leagueLastUpdated < :cutoffDate AND summonerId NOT IN :activeSummonerIds ORDER BY leagueLastUpdated")
 						.setParameter("cutoffDate", cutoffDate).setParameter("activeSummonerIds", activeSummonerIds);
 				// TODO pick max results, and update dynamically based on thread count?
 				List<SummonerEntity> summoners = query.setMaxResults(50).getResultList();
