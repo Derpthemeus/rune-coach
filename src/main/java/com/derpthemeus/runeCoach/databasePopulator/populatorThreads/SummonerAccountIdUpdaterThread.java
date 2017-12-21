@@ -1,20 +1,12 @@
 package com.derpthemeus.runeCoach.databasePopulator.populatorThreads;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
-import com.derpthemeus.runeCoach.databasePopulator.PopulatorThreadSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.SummonerAccountIdUpdaterSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
 import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.stream.Collectors;
 
 
 /**

@@ -1,10 +1,10 @@
 package com.derpthemeus.runeCoach.databasePopulator;
 
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.MatchDownloaderSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.MatchFinderSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.SummonerAccountIdUpdaterSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.SummonerFinderSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.SummonerLeagueUpdaterSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchDownloaderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchFinderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
 
 import java.util.HashMap;
 import java.util.Map;

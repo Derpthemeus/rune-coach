@@ -1,12 +1,12 @@
-package com.derpthemeus.runeCoach.databasePopulator.threadManagers;
+package com.derpthemeus.runeCoach.databasePopulator.threadSupervisors;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThreadSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.populatorThreads.MatchFinderThread;
+import com.derpthemeus.runeCoach.databasePopulator.populatorThreads.SummonerLeagueUpdaterThread;
 import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.List;
@@ -14,22 +14,22 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
-public class MatchFinderSupervisor extends PopulatorThreadSupervisor<MatchFinderThread> {
+public class SummonerLeagueUpdaterSupervisor extends PopulatorThreadSupervisor<SummonerLeagueUpdaterThread> {
 
-	private static MatchFinderSupervisor instance = new MatchFinderSupervisor();
+	private static SummonerLeagueUpdaterSupervisor instance = new SummonerLeagueUpdaterSupervisor();
 
 	@Override
-	public Class<MatchFinderThread> getThreadClass() {
-		return MatchFinderThread.class;
+	public Class<SummonerLeagueUpdaterThread> getThreadClass() {
+		return SummonerLeagueUpdaterThread.class;
 	}
 
-	public static MatchFinderSupervisor getInstance() {
+	public static SummonerLeagueUpdaterSupervisor getInstance() {
 		return instance;
 	}
 
 	private Queue<SummonerEntity> summonersToCheck = new ArrayDeque<>();
 
-	public synchronized SummonerEntity getSummonerToCheck() {
+	public synchronized SummonerEntity getSummonerToUpdate() {
 		// Refill the queue by querying the database
 		if (summonersToCheck.isEmpty()) {
 			List<Long> activeSummonerIds = getRunningThreads().stream().map(
@@ -49,14 +49,14 @@ public class MatchFinderSupervisor extends PopulatorThreadSupervisor<MatchFinder
 
 			try (Session session = getSessionFactory().openSession()) {
 				Calendar calendar = Calendar.getInstance();
-				// TODO pick update cutoff range
 				calendar.add(Calendar.DATE, -3);
+				Timestamp cutoffDate = new Timestamp(calendar.getTimeInMillis());
 
 				// TODO lock results?
-				Query query = session.createQuery("FROM SummonerEntity WHERE accountId != null AND matchesLastUpdated < :cutoffDate AND summonerId NOT IN :activeSummonerIds ORDER BY matchesLastUpdated ASC")
-						.setParameter("cutoffDate", new Time(calendar.getTimeInMillis())).setParameter("activeSummonerIds", activeSummonerIds);
+				Query query = session.createQuery("FROM SummonerEntity WHERE (league=null OR leagueLastUpdated < :cutoffDate) AND summonerId NOT IN :activeSummonerIds ORDER BY leagueLastUpdated")
+						.setParameter("cutoffDate", cutoffDate).setParameter("activeSummonerIds", activeSummonerIds);
 				// TODO pick max results, and update dynamically based on thread count?
-				List<SummonerEntity> summoners = query.setMaxResults(30).getResultList();
+				List<SummonerEntity> summoners = query.setMaxResults(50).getResultList();
 				summonersToCheck.addAll(summoners);
 			} catch (Exception ex) {
 				// TODO handle exception
@@ -65,4 +65,5 @@ public class MatchFinderSupervisor extends PopulatorThreadSupervisor<MatchFinder
 		}
 		return summonersToCheck.remove();
 	}
+
 }

@@ -1,4 +1,4 @@
-package com.derpthemeus.runeCoach.databasePopulator.threadManagers;
+package com.derpthemeus.runeCoach.databasePopulator.threadSupervisors;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThreadSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.populatorThreads.SummonerAccountIdUpdaterThread;

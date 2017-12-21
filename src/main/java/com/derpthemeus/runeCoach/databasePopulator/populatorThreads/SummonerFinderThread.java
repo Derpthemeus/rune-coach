@@ -1,7 +1,7 @@
 package com.derpthemeus.runeCoach.databasePopulator.populatorThreads;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
-import com.derpthemeus.runeCoach.databasePopulator.threadManagers.SummonerFinderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
 import com.derpthemeus.runeCoach.hibernate.LeagueEntity;
 import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
