@@ -38,7 +38,7 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 			for (LeaguePosition position : leaguePositions) {
 				if (position.getQueueType() == GameQueueType.RANKED_SOLO_5X5) {
 					// Track the league, if it isn't already tracked
-					Query leagueQuery = session.createQuery("FROM LeagueEntity WHERE uuid = :leagueId")
+					Query leagueQuery = session.createQuery("FROM LeagueEntity WHERE uuid=:leagueId")
 							.setParameter("leagueId", position.getLeagueId());
 					if (leagueQuery.uniqueResult() == null) {
 						LeagueEntity leagueEntity = new LeagueEntity();
@@ -49,12 +49,13 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 					}
 
 					summoner.setLeague(position.getLeagueId());
-					summoner.setLeagueLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-					session.update(summoner);
 
 					break;
 				}
 			}
+
+			summoner.setLeagueLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			session.update(summoner);
 
 			tx.commit();
 		} catch (HibernateException ex) {
