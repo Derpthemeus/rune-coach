@@ -2,6 +2,7 @@ package com.derpthemeus.runeCoach.databasePopulator;
 
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchDownloaderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchFinderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.StatAggregatorSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
@@ -18,7 +19,8 @@ public class DatabasePopulator {
 		threadCounts.put(SummonerLeagueUpdaterSupervisor.getInstance(), 2);
 		threadCounts.put(SummonerFinderSupervisor.getInstance(), 2);
 		threadCounts.put(MatchFinderSupervisor.getInstance(), 2);
-		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 4);
+		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 3);
+		threadCounts.put(StatAggregatorSupervisor.getInstance(), 2);
 	}
 
 	public static void main(String[] args) {
