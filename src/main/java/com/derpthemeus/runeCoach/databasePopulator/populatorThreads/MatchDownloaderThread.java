@@ -1,5 +1,6 @@
 package com.derpthemeus.runeCoach.databasePopulator.populatorThreads;
 
+import com.derpthemeus.runeCoach.DDragonManager;
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchDownloaderSupervisor;
 import com.derpthemeus.runeCoach.hibernate.MatchEntity;
@@ -36,10 +37,7 @@ public class MatchDownloaderThread extends PopulatorThread {
 
 			Match match = getSupervisor().getL4j8().getMatchAPI().getMatch(Platform.NA1, matchEntity.getMatchId());
 
-			// Trim the version down to just major and minor version
-			String longVersion = match.getMatchVersion();
-			String shortVersion = longVersion.substring(0, longVersion.indexOf(".", longVersion.indexOf(".") + 1));
-			matchEntity.setPatch(shortVersion);
+			matchEntity.setPatch(DDragonManager.convertToShortVersion(match.getMatchVersion()));
 
 			// Download data for each participant in the match
 			for (Participant participant : match.getParticipants()) {
