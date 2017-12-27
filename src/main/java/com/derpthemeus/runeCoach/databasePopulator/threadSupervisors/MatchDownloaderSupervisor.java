@@ -46,7 +46,7 @@ public class MatchDownloaderSupervisor extends PopulatorThreadSupervisor<MatchDo
 			}
 
 			try (Session session = getSessionFactory().openSession()) {
-				Query query = session.createQuery("FROM MatchEntity WHERE hasBeenDownloaded=false AND matchId NOT IN :activeMatchIds")
+				Query query = session.createQuery("FROM MatchEntity WHERE downloaded=false AND matchId NOT IN :activeMatchIds")
 						.setParameter("activeMatchIds", activeMatchIds);
 				// TODO pick max results, and update dynamically based on thread count?
 				List<MatchEntity> matches = query.setMaxResults(200).getResultList();
@@ -56,6 +56,6 @@ public class MatchDownloaderSupervisor extends PopulatorThreadSupervisor<MatchDo
 				ex.printStackTrace();
 			}
 		}
-		return matchesToDownload.remove();
+		return matchesToDownload.poll();
 	}
 }

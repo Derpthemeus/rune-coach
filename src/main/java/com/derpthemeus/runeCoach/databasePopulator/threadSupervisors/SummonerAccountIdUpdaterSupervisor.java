@@ -55,6 +55,6 @@ public class SummonerAccountIdUpdaterSupervisor extends PopulatorThreadSuperviso
 				ex.printStackTrace();
 			}
 		}
-		return summonersToCheck.remove();
+		return summonersToCheck.poll();
 	}
 }

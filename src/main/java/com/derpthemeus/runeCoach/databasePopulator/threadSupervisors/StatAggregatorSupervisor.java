@@ -82,11 +82,7 @@ public class StatAggregatorSupervisor extends PopulatorThreadSupervisor<StatAggr
 				} else {
 					// Remove stats that are already being processed
 					for (AggregatedChampionStatsEntity activeStat : activeStats) {
-						for (AggregatedChampionStatsEntity stat : stats) {
-							if (stat.getPerkId() == activeStat.getPerkId() && stat.getChampionId() == activeStat.getChampionId()) {
-								stats.remove(stat);
-							}
-						}
+						stats.removeIf(stat -> stat.getPerkId() == activeStat.getPerkId() && stat.getChampionId() == activeStat.getChampionId());
 					}
 				}
 				tx.commit();
@@ -100,7 +96,7 @@ public class StatAggregatorSupervisor extends PopulatorThreadSupervisor<StatAggr
 			}
 		}
 
-		return statsToAggregate.remove();
+		return statsToAggregate.poll();
 	}
 
 	/**

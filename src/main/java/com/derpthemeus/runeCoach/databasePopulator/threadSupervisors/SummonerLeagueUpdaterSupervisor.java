@@ -63,6 +63,6 @@ public class SummonerLeagueUpdaterSupervisor extends PopulatorThreadSupervisor<S
 				ex.printStackTrace();
 			}
 		}
-		return summonersToCheck.remove();
+		return summonersToCheck.poll();
 	}
 }

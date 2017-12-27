@@ -26,10 +26,20 @@ public class SummonerFinderThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
+		leagueEntity = getSupervisor().getLeagueToCheck();
+		// Sleep for 10 seconds if there is no work to be done
+		if (leagueEntity == null) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ex) {
+				handleException(ex);
+			}
+			return;
+		}
+
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
-			leagueEntity = getSupervisor().getLeagueToCheck();
 			session.load(leagueEntity, leagueEntity.getUuid());
 			session.lock(leagueEntity, LockModeType.PESSIMISTIC_WRITE);
 

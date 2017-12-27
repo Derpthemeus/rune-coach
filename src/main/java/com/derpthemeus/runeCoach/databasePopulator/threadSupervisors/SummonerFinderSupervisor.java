@@ -59,7 +59,7 @@ public class SummonerFinderSupervisor extends PopulatorThreadSupervisor<Summoner
 				ex.printStackTrace();
 			}
 		}
-		return leaguesToCheck.remove();
+		return leaguesToCheck.poll();
 	}
 
 	public static SummonerFinderSupervisor getInstance() {

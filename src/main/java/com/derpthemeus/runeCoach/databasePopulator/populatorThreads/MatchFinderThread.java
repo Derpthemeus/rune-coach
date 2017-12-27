@@ -9,7 +9,6 @@ import no.stelar7.api.l4j8.basic.constants.types.GameQueueType;
 import no.stelar7.api.l4j8.pojo.match.MatchReference;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import javax.persistence.LockModeType;
 import java.sql.Timestamp;
@@ -28,6 +27,17 @@ public class MatchFinderThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
+		summoner = getSupervisor().getSummonerToCheck();
+		// Sleep for 10 seconds if there is no work to be done
+		if (summoner == null) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ex) {
+				handleException(ex);
+			}
+			return;
+		}
+
 		// TODO calculate this dynamically based on patch date?
 		Calendar matchCutoffDate = Calendar.getInstance();
 		matchCutoffDate.add(Calendar.DATE, -15);
@@ -35,7 +45,6 @@ public class MatchFinderThread extends PopulatorThread {
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
-			summoner = getSupervisor().getSummonerToCheck();
 			session.load(summoner, summoner.getSummonerId());
 			session.lock(summoner, LockModeType.PESSIMISTIC_WRITE);
 
@@ -50,11 +59,8 @@ public class MatchFinderThread extends PopulatorThread {
 					break;
 				}
 
-				Query query = session.createQuery("FROM MatchEntity WHERE matchId = :matchId")
-						.setParameter("matchId", reference.getGameId());
-
 				// Skip the match if it has already be tracked
-				if (query.uniqueResult() != null) {
+				if (session.get(MatchEntity.class, reference.getGameId()) != null) {
 					continue;
 				}
 
@@ -70,7 +76,7 @@ public class MatchFinderThread extends PopulatorThread {
 				summoner.setLastMatchTimestamp(new Timestamp(matchList.get(0).getTimestamp()));
 			}
 			summoner.setMatchesLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			
+
 			session.update(summoner);
 			tx.commit();
 		} catch (Exception ex) {

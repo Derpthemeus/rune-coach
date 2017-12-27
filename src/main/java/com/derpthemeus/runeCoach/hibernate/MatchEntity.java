@@ -12,9 +12,8 @@ import java.util.Objects;
 @Table(name = "matches", schema = "rune_coach")
 public class MatchEntity {
 	private long matchId;
-	private boolean havePerksBeenProcessed;
 	private String patch;
-	private boolean hasBeenDownloaded;
+	private boolean downloaded;
 	private Timestamp matchTimestamp;
 
 	@Id
@@ -27,17 +26,6 @@ public class MatchEntity {
 		this.matchId = matchId;
 	}
 
-	// TODO fix this name
-	@Basic
-	@Column(name = "processed_perks", nullable = false, columnDefinition = "BOOLEAN")
-	public boolean isHavePerksBeenProcessed() {
-		return havePerksBeenProcessed;
-	}
-
-	public void setHavePerksBeenProcessed(boolean processedPerks) {
-		this.havePerksBeenProcessed = processedPerks;
-	}
-
 	@Basic
 	@Column(name = "patch", length = 8)
 	public String getPatch() {
@@ -48,15 +36,14 @@ public class MatchEntity {
 		this.patch = patch;
 	}
 
-	// TODO fix this name
 	@Basic
 	@Column(name = "downloaded_match", nullable = false, columnDefinition = "BOOLEAN")
-	public boolean isHasBeenDownloaded() {
-		return hasBeenDownloaded;
+	public boolean isDownloaded() {
+		return downloaded;
 	}
 
-	public void setHasBeenDownloaded(boolean downloadedMatch) {
-		this.hasBeenDownloaded = downloadedMatch;
+	public void setDownloaded(boolean downloadedMatch) {
+		this.downloaded = downloadedMatch;
 	}
 
 	@Basic
@@ -75,8 +62,7 @@ public class MatchEntity {
 		if (o == null || getClass() != o.getClass()) return false;
 		MatchEntity that = (MatchEntity) o;
 		return matchId == that.matchId &&
-				havePerksBeenProcessed == that.havePerksBeenProcessed &&
-				hasBeenDownloaded == that.hasBeenDownloaded &&
+				downloaded == that.downloaded &&
 				Objects.equals(patch, that.patch) &&
 				Objects.equals(matchTimestamp, that.matchTimestamp);
 	}
@@ -84,6 +70,6 @@ public class MatchEntity {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(matchId, havePerksBeenProcessed, patch, hasBeenDownloaded, matchTimestamp);
+		return Objects.hash(matchId, patch, downloaded, matchTimestamp);
 	}
 }

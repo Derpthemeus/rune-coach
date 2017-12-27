@@ -20,10 +20,21 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
+		summonerEntity = getSupervisor().getSummonerToUpdate();
+		// Sleep for 10 seconds if there is no work to be done
+		if (summonerEntity == null) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ex) {
+				handleException(ex);
+			}
+			return;
+		}
+
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
-			summonerEntity = getSupervisor().getSummonerToUpdate();
+			session.load(summonerEntity, summonerEntity.getSummonerId());
 			session.lock(summonerEntity, LockModeType.PESSIMISTIC_WRITE);
 
 			getSupervisor().getL4j8().getSummonerAPI().getSummonerById(Platform.NA1, summonerEntity.getSummonerId());

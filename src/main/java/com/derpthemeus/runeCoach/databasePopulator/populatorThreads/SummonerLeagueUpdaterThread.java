@@ -11,7 +11,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -26,10 +25,20 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
+		summoner = getSupervisor().getSummonerToUpdate();
+		// Sleep for 10 seconds if there is no work to be done
+		if (summoner == null) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ex) {
+				handleException(ex);
+			}
+			return;
+		}
+
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
-			summoner = getSupervisor().getSummonerToUpdate();
 			session.load(summoner, summoner.getSummonerId());
 			session.lock(summoner, LockMode.PESSIMISTIC_WRITE);
 
@@ -38,9 +47,7 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 			for (LeaguePosition position : leaguePositions) {
 				if (position.getQueueType() == GameQueueType.RANKED_SOLO_5X5) {
 					// Track the league, if it isn't already tracked
-					Query leagueQuery = session.createQuery("FROM LeagueEntity WHERE uuid=:leagueId")
-							.setParameter("leagueId", position.getLeagueId());
-					if (leagueQuery.uniqueResult() == null) {
+					if (session.get(LeagueEntity.class, position.getLeagueId()) == null) {
 						LeagueEntity leagueEntity = new LeagueEntity();
 						leagueEntity.setUuid(position.getLeagueId());
 						leagueEntity.setLastChecked(new Timestamp(0));

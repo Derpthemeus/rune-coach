@@ -62,6 +62,6 @@ public class MatchFinderSupervisor extends PopulatorThreadSupervisor<MatchFinder
 				ex.printStackTrace();
 			}
 		}
-		return summonersToCheck.remove();
+		return summonersToCheck.poll();
 	}
 }

@@ -15,7 +15,6 @@ import no.stelar7.api.l4j8.pojo.match.ParticipantIdentity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import javax.persistence.LockModeType;
 
@@ -27,11 +26,21 @@ public class MatchDownloaderThread extends PopulatorThread {
 
 	@Override
 	public void runOperation() {
+		matchEntity = getSupervisor().getMatchToDownload();
+		// Sleep for 10 seconds if there is no work to be done
+		if (matchEntity == null) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ex) {
+				handleException(ex);
+			}
+			return;
+		}
+
 		Transaction tx = null;
 		try (Session session = getSupervisor().getSessionFactory().openSession()) {
 			tx = session.beginTransaction();
 
-			matchEntity = getSupervisor().getMatchToDownload();
 			session.load(matchEntity, matchEntity.getMatchId());
 			session.lock(matchEntity, LockModeType.PESSIMISTIC_WRITE);
 
@@ -64,11 +73,8 @@ public class MatchDownloaderThread extends PopulatorThread {
 
 			// Track the summoners in the match (if they haven't been tracked already)
 			for (ParticipantIdentity identity : match.getParticipantIdentities()) {
-				Query summonerQuery = session.createQuery("FROM SummonerEntity WHERE summonerId = :summonerId")
-						.setParameter("summonerId", identity.getPlayer().getSummonerId());
-
 				// Skip the summoner if they are already tracked
-				if (summonerQuery.uniqueResult() != null) {
+				if (session.get(SummonerEntity.class, identity.getPlayer().getSummonerId()) != null) {
 					continue;
 				}
 
@@ -79,7 +85,7 @@ public class MatchDownloaderThread extends PopulatorThread {
 				session.save(summonerEntity);
 			}
 
-			matchEntity.setHasBeenDownloaded(true);
+			matchEntity.setDownloaded(true);
 			session.update(matchEntity);
 			tx.commit();
 		} catch (HibernateException ex) {
