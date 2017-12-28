@@ -11,16 +11,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "aggregated_champion_stats", schema = "rune_coach")
 @IdClass(AggregatedChampionStatsEntityPK.class)
-public class AggregatedChampionStatsEntity {
+public class AggregatedChampionStatsEntity extends AggregatedStatsEntity {
 	private short championId;
-	private short perkId;
-	private String patch;
-	private long var1Total;
-	private long var2Total;
-	private long var3Total;
 	private long lastPlayerId;
-	private long totalMatches;
-	private long totalWins;
 
 	@Id
 	@Column(name = "champion_id", nullable = false)
@@ -32,56 +25,6 @@ public class AggregatedChampionStatsEntity {
 		this.championId = championId;
 	}
 
-	@Id
-	@Column(name = "perk_id", nullable = false)
-	public short getPerkId() {
-		return perkId;
-	}
-
-	public void setPerkId(short perkId) {
-		this.perkId = perkId;
-	}
-
-	@Id
-	@Column(name = "patch", nullable = false, length = 8)
-	public String getPatch() {
-		return patch;
-	}
-
-	public void setPatch(String patch) {
-		this.patch = patch;
-	}
-
-	@Basic
-	@Column(name = "var1_total", nullable = false)
-	public long getVar1Total() {
-		return var1Total;
-	}
-
-	public void setVar1Total(long var1Total) {
-		this.var1Total = var1Total;
-	}
-
-	@Basic
-	@Column(name = "var2_total", nullable = false)
-	public long getVar2Total() {
-		return var2Total;
-	}
-
-	public void setVar2Total(long var2Total) {
-		this.var2Total = var2Total;
-	}
-
-	@Basic
-	@Column(name = "var3_total", nullable = false)
-	public long getVar3Total() {
-		return var3Total;
-	}
-
-	public void setVar3Total(long var3Total) {
-		this.var3Total = var3Total;
-	}
-
 	@Basic
 	@Column(name = "last_player_id", nullable = false)
 	public long getLastPlayerId() {
@@ -90,26 +33,6 @@ public class AggregatedChampionStatsEntity {
 
 	public void setLastPlayerId(long lastPlayerId) {
 		this.lastPlayerId = lastPlayerId;
-	}
-
-	@Basic
-	@Column(name = "total_matches", nullable = false)
-	public long getTotalMatches() {
-		return totalMatches;
-	}
-
-	public void setTotalMatches(long totalMatches) {
-		this.totalMatches = totalMatches;
-	}
-
-	@Basic
-	@Column(name = "total_wins", nullable = false)
-	public long getTotalWins() {
-		return totalWins;
-	}
-
-	public void setTotalWins(long totalWins) {
-		this.totalWins = totalWins;
 	}
 
 	@Override
@@ -129,7 +52,6 @@ public class AggregatedChampionStatsEntity {
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(championId, perkId, patch, var1Total, var2Total, var3Total, lastPlayerId, totalMatches);
 	}
 }

@@ -16,5 +16,8 @@
 		<mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.SummonerEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedChampionStatsEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedTagStatsEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.TagEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.TagChampionEntity"/>
 	</session-factory>
 </hibernate-configuration>

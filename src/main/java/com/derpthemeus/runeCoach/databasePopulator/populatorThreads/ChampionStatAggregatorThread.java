@@ -2,7 +2,7 @@ package com.derpthemeus.runeCoach.databasePopulator.populatorThreads;
 
 import com.derpthemeus.runeCoach.DDragonManager;
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
-import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.StatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.ChampionStatAggregatorSupervisor;
 import com.derpthemeus.runeCoach.hibernate.AggregatedChampionStatsEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,7 +10,7 @@ import org.hibernate.query.Query;
 
 import java.io.IOException;
 
-public class StatAggregatorThread extends PopulatorThread {
+public class ChampionStatAggregatorThread extends PopulatorThread {
 
 	private AggregatedChampionStatsEntity stat;
 	// The LoL patch (e.g. "7.24") that this thread is aggregating stats for
@@ -77,8 +77,8 @@ public class StatAggregatorThread extends PopulatorThread {
 	}
 
 	@Override
-	public StatAggregatorSupervisor getSupervisor() {
-		return StatAggregatorSupervisor.getInstance();
+	public ChampionStatAggregatorSupervisor getSupervisor() {
+		return ChampionStatAggregatorSupervisor.getInstance();
 	}
 
 	public AggregatedChampionStatsEntity getActiveStat() {
