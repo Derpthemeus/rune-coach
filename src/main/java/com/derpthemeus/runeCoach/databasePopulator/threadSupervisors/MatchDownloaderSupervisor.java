@@ -52,8 +52,7 @@ public class MatchDownloaderSupervisor extends PopulatorThreadSupervisor<MatchDo
 				List<MatchEntity> matches = query.setMaxResults(200).getResultList();
 				matchesToDownload.addAll(matches);
 			} catch (Exception ex) {
-				// TODO handle exception
-				ex.printStackTrace();
+				getLogger().error("Error refilling lazy list", ex);
 			}
 		}
 		return matchesToDownload.poll();

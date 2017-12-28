@@ -4,6 +4,8 @@ import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.utils.Utils;
 import no.stelar7.api.l4j8.pojo.match.Match;
 import no.stelar7.api.l4j8.pojo.match.ParticipantIdentity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,9 +20,10 @@ import java.net.URL;
  * Adds players from seed data (matches are from before Runes Reforged, and cannot be used) to the database
  */
 public class SetupSeedData {
+
+	private static final Logger logger = LogManager.getLogger();
+
 	public static void main(String[] args) {
-
-
 		Configuration config = new Configuration()
 				.configure()
 				.setProperty("hibernate.connection.username", System.getenv("MYSQL_USERNAME"))
@@ -34,8 +37,8 @@ public class SetupSeedData {
 			try {
 				URL url = new URL("https://s3-us-west-1.amazonaws.com/riot-developer-portal/seed-data/matches" + seedFile + ".json");
 				reader = new InputStreamReader(url.openStream());
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ex) {
+				logger.error("Error downloading file " + seedFile, ex);
 				continue;
 			}
 
@@ -59,11 +62,11 @@ public class SetupSeedData {
 						if (tx != null) {
 							tx.markRollbackOnly();
 						}
-						ex.printStackTrace();
+						logger.error("Error adding summoner" + summonerEntity.getSummonerId() + " to database (they may have already been added)", ex);
 					}
 				}
 			}
-			System.out.println("Finished file " + seedFile);
+			logger.info("Finished processing file " + seedFile + "/10");
 		}
 	}
 

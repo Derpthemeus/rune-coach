@@ -32,7 +32,7 @@ public class SummonerFinderThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				handleException(ex);
+				getLogger().error(ex);
 			}
 			return;
 		}
@@ -81,7 +81,7 @@ public class SummonerFinderThread extends PopulatorThread {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			handleException(ex);
+			getLogger().error("Error finding summoners for league " + leagueEntity.getUuid(), ex);
 		}
 		leagueEntity = null;
 	}

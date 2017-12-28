@@ -2,3 +2,4 @@
 .idea/
 lib/
 settings.gradle
+logs/

@@ -91,8 +91,7 @@ public class StatAggregatorSupervisor extends PopulatorThreadSupervisor<StatAggr
 				if (tx != null) {
 					tx.markRollbackOnly();
 				}
-				// TODO handle exception
-				ex.printStackTrace();
+				getLogger().error("Error refilling lazy list", ex);
 			}
 		}
 

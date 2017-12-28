@@ -59,8 +59,7 @@ public class SummonerLeagueUpdaterSupervisor extends PopulatorThreadSupervisor<S
 				List<SummonerEntity> summoners = query.setMaxResults(50).getResultList();
 				summonersToCheck.addAll(summoners);
 			} catch (Exception ex) {
-				// TODO handle exception
-				ex.printStackTrace();
+				getLogger().error("Error refilling lazy list", ex);
 			}
 		}
 		return summonersToCheck.poll();

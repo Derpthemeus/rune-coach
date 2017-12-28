@@ -31,7 +31,7 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				handleException(ex);
+				getLogger().error(ex);
 			}
 			return;
 		}
@@ -69,7 +69,7 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			handleException(ex);
+			getLogger().error("Error updating league for summoner " + summoner.getSummonerId(), ex);
 		}
 		summoner = null;
 	}

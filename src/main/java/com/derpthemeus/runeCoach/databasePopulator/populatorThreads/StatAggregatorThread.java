@@ -20,11 +20,11 @@ public class StatAggregatorThread extends PopulatorThread {
 	public void runOperation() {
 		// Use the latest patch if one hasn't been specified
 		if (patch == null) {
-			System.out.println("StatAggregatorThread #" + this.getId() + " is defaulting to most recent patch");
+			getLogger().info("Defaulting to most recent patch");
 			try {
 				patch = DDragonManager.convertToShortVersion(DDragonManager.getLatestVersion());
 			} catch (IOException ex) {
-				handleException(ex);
+				getLogger().error("Error getting DDragon version", ex);
 				return;
 			}
 		}
@@ -35,7 +35,7 @@ public class StatAggregatorThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				handleException(ex);
+				getLogger().error(ex);
 			}
 			return;
 		}
@@ -71,7 +71,7 @@ public class StatAggregatorThread extends PopulatorThread {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			handleException(ex);
+			getLogger().error("Error aggregating stats for perk " + stat.getPerkId() + " on champion " + stat.getChampionId() + " during patch " + stat.getPatch(), ex);
 		}
 		stat = null;
 	}

@@ -55,8 +55,7 @@ public class SummonerFinderSupervisor extends PopulatorThreadSupervisor<Summoner
 				List<LeagueEntity> leagues = query.setMaxResults(40).getResultList();
 				leaguesToCheck.addAll(leagues);
 			} catch (Exception ex) {
-				// TODO handle exception
-				ex.printStackTrace();
+				getLogger().error("Error refilling lazy list", ex);
 			}
 		}
 		return leaguesToCheck.poll();

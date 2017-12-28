@@ -33,7 +33,7 @@ public class MatchFinderThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				handleException(ex);
+				getLogger().error(ex);
 			}
 			return;
 		}
@@ -83,7 +83,7 @@ public class MatchFinderThread extends PopulatorThread {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			handleException(ex);
+			getLogger().error("Error processing match history for summoner ID " + summoner.getSummonerId(), ex);
 		}
 		summoner = null;
 	}

@@ -1,12 +1,15 @@
 package com.derpthemeus.runeCoach.databasePopulator;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public abstract class PopulatorThread<T extends PopulatorThread> extends Thread {
 
 	private boolean keepAlive = true;
 
-	// TODO handle exceptions better
-	protected void handleException(Exception ex) {
-		ex.printStackTrace();
+	protected Logger getLogger() {
+		return LogManager.getLogger();
 	}
 
 	/**

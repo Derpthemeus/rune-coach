@@ -26,7 +26,7 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				handleException(ex);
+				getLogger().error(ex);
 			}
 			return;
 		}
@@ -46,7 +46,7 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			handleException(ex);
+			getLogger().error("Error updating account ID for summoner " + summonerEntity.getSummonerId(), ex);
 		}
 		summonerEntity = null;
 	}

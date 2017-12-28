@@ -2,6 +2,8 @@ package com.derpthemeus.runeCoach.databasePopulator;
 
 import no.stelar7.api.l4j8.basic.APICredentials;
 import no.stelar7.api.l4j8.impl.L4J8;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -49,13 +51,16 @@ public abstract class PopulatorThreadSupervisor<T extends PopulatorThread> {
 			thread.start();
 			return thread;
 		} catch (Exception ex) {
-			System.err.println("Error spawning new PopulatorThread:");
-			ex.printStackTrace();
+			getLogger().error("Error spawning new PopulatorThread:", ex);
 		}
 		return null;
 	}
 
 	public List<T> getRunningThreads() {
 		return runningThreads;
+	}
+
+	protected Logger getLogger() {
+		return LogManager.getLogger();
 	}
 }
