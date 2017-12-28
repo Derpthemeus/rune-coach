@@ -4,6 +4,7 @@ import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
 import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
+import no.stelar7.api.l4j8.pojo.summoner.Summoner;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,8 +38,8 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 			session.load(summonerEntity, summonerEntity.getSummonerId());
 			session.lock(summonerEntity, LockModeType.PESSIMISTIC_WRITE);
 
-			getSupervisor().getL4j8().getSummonerAPI().getSummonerById(Platform.NA1, summonerEntity.getSummonerId());
-			summonerEntity.setAccountId(summonerEntity.getAccountId());
+			Summoner summoner = getSupervisor().getL4j8().getSummonerAPI().getSummonerById(Platform.NA1, summonerEntity.getSummonerId());
+			summonerEntity.setAccountId(summoner.getAccountId());
 
 			session.update(summonerEntity);
 			tx.commit();
