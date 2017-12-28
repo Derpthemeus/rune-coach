@@ -18,10 +18,10 @@ public abstract class PopulatorThreadSupervisor<T extends PopulatorThread> {
 	private List<T> runningThreads = new ArrayList<>();
 
 	static {
-		// TODO initialize these better?
 		l4j8 = new L4J8(new APICredentials(System.getenv("API_KEY"), null));
 		Configuration config = new Configuration()
 				.configure()
+				.setProperty("hibernate.connection.url", System.getenv("MYSQL_CONNECTION_URL"))
 				.setProperty("hibernate.connection.username", System.getenv("MYSQL_USERNAME"))
 				.setProperty("hibernate.connection.password", System.getenv("MYSQL_PASSWORD"));
 

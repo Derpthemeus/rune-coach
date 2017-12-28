@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
-        "-//Hibernate/Hibernate Configuration DTD//EN"
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		"-//Hibernate/Hibernate Configuration DTD//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <property name="connection.url">jdbc:mysql://localhost:3306/rune_coach</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <mapping class="com.derpthemeus.runeCoach.hibernate.LeagueEntity"/>
-        <mapping class="com.derpthemeus.runeCoach.hibernate.MatchEntity"/>
-        <mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantPerkEntity"/>
-        <mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantEntity"/>
-        <mapping class="com.derpthemeus.runeCoach.hibernate.SummonerEntity"/>
-        <!-- <property name="connection.username"/> -->
-        <!-- <property name="connection.password"/> -->
+	<session-factory>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="c3p0.min_size">3</property>
+		<property name="c3p0.max_size">100</property>
+		<property name="c3p0.timeout">0</property>
+		<property name="c3p0.maxStatements">10</property>
 
-        <!-- DB schema will be updated if needed -->
-        <!-- <property name="hbm2ddl.auto">update</property> -->
-    </session-factory>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.LeagueEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.MatchEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantPerkEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.SummonerEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedChampionStatsEntity"/>
+	</session-factory>
 </hibernate-configuration>
