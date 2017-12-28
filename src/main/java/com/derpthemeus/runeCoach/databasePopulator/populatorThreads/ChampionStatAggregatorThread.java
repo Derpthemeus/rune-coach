@@ -60,10 +60,10 @@ public class ChampionStatAggregatorThread extends PopulatorThread {
 				stat.setVar2Total(stat.getVar2Total() + (long) result[2]);
 				stat.setVar3Total(stat.getVar3Total() + (long) result[3]);
 
-				stat.setTotalWins((long) result[4]);
+				stat.setTotalWins(stat.getTotalWins() + (long) result[4]);
 				stat.setLastPlayerId((long) result[5]);
 
-				session.saveOrUpdate(stat);
+				session.update(stat);
 			}
 
 			tx.commit();
