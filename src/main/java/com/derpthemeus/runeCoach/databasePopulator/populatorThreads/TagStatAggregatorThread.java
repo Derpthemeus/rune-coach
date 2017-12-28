@@ -54,10 +54,9 @@ public class TagStatAggregatorThread extends PopulatorThread {
 			).setParameter("perkId", stat.getPerkId()).setParameter("patch", stat.getPatch());
 			Object[] result = (Object[]) query.getSingleResult();
 
-			long count = (long) result[0];
-			// The values for `SUM`s will be `null` if `count` is 0, so the 0 filled entity that is already in the DB will be kept
-			if (count > 0) {
-				stat.setTotalMatches(stat.getTotalMatches() + count);
+			// The values for `SUM`s will be `null` if there are no stats to aggregate
+			if (result[0] != null) {
+				stat.setTotalMatches(stat.getTotalMatches() + (long) result[0]);
 				stat.setVar1Total(stat.getVar1Total() + (long) result[1]);
 				stat.setVar2Total(stat.getVar2Total() + (long) result[2]);
 				stat.setVar3Total(stat.getVar3Total() + (long) result[3]);
