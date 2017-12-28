@@ -7,7 +7,6 @@ import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
 import no.stelar7.api.l4j8.basic.constants.types.GameQueueType;
 import no.stelar7.api.l4j8.pojo.league.LeaguePosition;
-import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -65,7 +64,7 @@ public class SummonerLeagueUpdaterThread extends PopulatorThread {
 			session.update(summoner);
 
 			tx.commit();
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}

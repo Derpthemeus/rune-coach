@@ -7,7 +7,6 @@ import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
 import no.stelar7.api.l4j8.pojo.league.LeagueItem;
 import no.stelar7.api.l4j8.pojo.league.LeagueList;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -77,7 +76,7 @@ public class SummonerFinderThread extends PopulatorThread {
 			leagueEntity.setLastChecked(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			session.update(leagueEntity);
 			tx.commit();
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}

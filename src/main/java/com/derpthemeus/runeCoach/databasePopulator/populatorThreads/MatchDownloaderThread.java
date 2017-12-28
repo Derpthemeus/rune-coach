@@ -12,7 +12,6 @@ import no.stelar7.api.l4j8.pojo.match.Match;
 import no.stelar7.api.l4j8.pojo.match.MatchPerk;
 import no.stelar7.api.l4j8.pojo.match.Participant;
 import no.stelar7.api.l4j8.pojo.match.ParticipantIdentity;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -88,11 +87,11 @@ public class MatchDownloaderThread extends PopulatorThread {
 			matchEntity.setDownloaded(true);
 			session.update(matchEntity);
 			tx.commit();
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
-			getLogger().error("Error downloading match " + matchEntity.getMatchId());
+			getLogger().error("Error downloading match " + matchEntity.getMatchId(), ex);
 		}
 		matchEntity = null;
 	}

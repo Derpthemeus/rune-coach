@@ -5,7 +5,6 @@ import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAcc
 import com.derpthemeus.runeCoach.hibernate.SummonerEntity;
 import no.stelar7.api.l4j8.basic.constants.api.Platform;
 import no.stelar7.api.l4j8.pojo.summoner.Summoner;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -43,7 +42,7 @@ public class SummonerAccountIdUpdaterThread extends PopulatorThread {
 
 			session.update(summonerEntity);
 			tx.commit();
-		} catch (HibernateException ex) {
+		} catch (Exception ex) {
 			if (tx != null) {
 				tx.markRollbackOnly();
 			}
