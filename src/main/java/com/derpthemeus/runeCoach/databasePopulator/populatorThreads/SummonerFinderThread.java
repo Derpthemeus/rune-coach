@@ -32,7 +32,7 @@ public class SummonerFinderThread extends PopulatorThread {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException ex) {
-				getLogger().error(ex);
+				getLogger().throwing(ex);
 			}
 			return;
 		}
