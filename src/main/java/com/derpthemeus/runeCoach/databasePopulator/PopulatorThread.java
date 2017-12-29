@@ -4,7 +4,7 @@ package com.derpthemeus.runeCoach.databasePopulator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class PopulatorThread<T extends PopulatorThread> extends Thread {
+public abstract class PopulatorThread extends Thread {
 
 	private boolean keepAlive = true;
 
