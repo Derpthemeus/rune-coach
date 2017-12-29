@@ -6,17 +6,17 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class AggregatedTagStatsEntityPK implements Serializable {
-	private String tagId;
+	private short tagId;
 	private String patch;
 	private short perkId;
 
 	@Column(name = "tag_id", nullable = false, length = 20)
 	@Id
-	public String getTagId() {
+	public short getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(String tagId) {
+	public void setTagId(short tagId) {
 		this.tagId = tagId;
 	}
 

@@ -64,13 +64,13 @@ public class TagStatAggregatorSupervisor extends PopulatorThreadSupervisor<TagSt
 
 					String ddragonVersion = DDragonManager.getLongVersion(patch);
 
-					List<String> tagIds = session.createQuery("SELECT tagId FROM TagEntity").getResultList();
+					List<Short> tagIds = session.createQuery("SELECT tagId FROM TagEntity").getResultList();
 					List<Short> perkIds = getPerkIds(ddragonVersion);
 
 					// Create a new List so it doesn't need to be reallocated multiple times as it's filled
 					stats = new ArrayList<>(perkIds.size() * tagIds.size());
 
-					for (String tagId : tagIds) {
+					for (short tagId : tagIds) {
 						for (short perkId : perkIds) {
 							AggregatedTagStatsEntity stat = new AggregatedTagStatsEntity();
 							stat.setTagId(tagId);
@@ -85,7 +85,7 @@ public class TagStatAggregatorSupervisor extends PopulatorThreadSupervisor<TagSt
 				} else {
 					// Remove stats that are already being processed
 					for (AggregatedTagStatsEntity activeStat : activeStats) {
-						stats.removeIf(stat -> stat.getPerkId() == activeStat.getPerkId() && stat.getTagId().equals(activeStat.getTagId()));
+						stats.removeIf(stat -> stat.getPerkId() == activeStat.getPerkId() && stat.getTagId() == activeStat.getTagId());
 					}
 				}
 				tx.commit();

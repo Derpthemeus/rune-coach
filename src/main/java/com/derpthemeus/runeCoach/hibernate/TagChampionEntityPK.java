@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class TagChampionEntityPK implements Serializable {
 	private short championId;
-	private String tagId;
+	private short tagId;
 
 	@Column(name = "champion_id", nullable = false)
 	@Id
@@ -21,11 +21,11 @@ public class TagChampionEntityPK implements Serializable {
 
 	@Column(name = "tag_id", nullable = false, length = 20)
 	@Id
-	public String getTagId() {
+	public short getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(String tagId) {
+	public void setTagId(short tagId) {
 		this.tagId = tagId;
 	}
 

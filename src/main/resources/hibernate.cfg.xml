@@ -20,5 +20,6 @@
 		<mapping class="com.derpthemeus.runeCoach.hibernate.TagEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.TagChampionEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.PerkScoreEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.PerkAlternativeEntity"/>
 	</session-factory>
 </hibernate-configuration>

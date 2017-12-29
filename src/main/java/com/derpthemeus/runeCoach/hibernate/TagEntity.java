@@ -10,7 +10,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "tags", schema = "rune_coach")
 public class TagEntity {
-	private String tagId;
+	private short tagId;
+	private String tagName;
 	private String noun;
 	private String adjective;
 	private String verb;
@@ -18,12 +19,21 @@ public class TagEntity {
 
 	@Id
 	@Column(name = "tag_id", nullable = false, length = 20)
-	public String getTagId() {
+	public short getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(String tagId) {
+	public void setTagId(short tagId) {
 		this.tagId = tagId;
+	}
+
+	@Column(name = "tag_name", nullable = false, length = 20)
+	public String getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
 	@Basic
@@ -71,7 +81,7 @@ public class TagEntity {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TagEntity tagEntity = (TagEntity) o;
-		return Objects.equals(tagId, tagEntity.tagId) &&
+		return Objects.equals(tagName, tagEntity.tagName) &&
 				Objects.equals(noun, tagEntity.noun) &&
 				Objects.equals(adjective, tagEntity.adjective) &&
 				Objects.equals(verb, tagEntity.verb) &&
@@ -80,6 +90,6 @@ public class TagEntity {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(tagId, noun, adjective, verb, note);
+		return Objects.hash(tagName, noun, adjective, verb, note);
 	}
 }

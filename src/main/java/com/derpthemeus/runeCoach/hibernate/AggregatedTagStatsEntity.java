@@ -13,16 +13,16 @@ import java.util.Objects;
 @Table(name = "aggregated_tag_stats", schema = "rune_coach")
 @IdClass(AggregatedTagStatsEntityPK.class)
 public class AggregatedTagStatsEntity extends AggregatedStatsEntity {
-	private String tagId;
+	private short tagId;
 	private Timestamp lastUpdated;
 
 	@Id
 	@Column(name = "tag_id", nullable = false, length = 20)
-	public String getTagId() {
+	public short getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(String tagId) {
+	public void setTagId(short tagId) {
 		this.tagId = tagId;
 	}
 

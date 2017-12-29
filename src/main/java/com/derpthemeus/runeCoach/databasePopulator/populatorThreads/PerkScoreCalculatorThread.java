@@ -61,16 +61,49 @@ public class PerkScoreCalculatorThread extends PopulatorThread {
 				}
 			}
 
-			Query query;
+			// Will only be set if this score is for a tag. A list of champion IDs that have this tag.
+			List<Short> championIds = null;
+			String selectExpr, perkClause, champClause;
+
 			if (keystoneIds == null) {
 				// Calculate for a single rune
-				query = session.createQuery("SELECT totalWins*1.0/totalMatches FROM AggregatedChampionStatsEntity WHERE perkId=:perkId AND championId=:championId AND patch=:patch")
-						.setParameter("perkId", score.getPerkId()).setParameter("championId", score.getChampionId()).setParameter("patch", score.getPatch());
+				selectExpr = "totalWins*1.0/totalMatches";
+				perkClause = "perkId=:perkId";
 			} else {
 				// Calculate for a style
-				query = session.createQuery("SELECT SUM(totalWins)*1.0/SUM(totalMatches) FROM AggregatedChampionStatsEntity WHERE perkId IN (:keystoneIds) AND championId=:championId AND patch=:patch")
-						.setParameter("keystoneIds", keystoneIds).setParameter("championId", score.getChampionId()).setParameter("patch", score.getPatch());
+				selectExpr = "SUM(totalWins)*1.0/SUM(totalMatches)";
+				perkClause = "perkId IN (:keystoneIds)";
 			}
+
+			if (score.getChampionId() < 0) {
+				// Calculate for a tag
+				Query champsQuery = session.createQuery("SELECT championId FROM TagChampionEntity WHERE tagId=:tagId").setParameter("tagId", (short) -score.getChampionId());
+				championIds = champsQuery.getResultList();
+				champClause = "championId IN (:championIds)";
+			} else {
+				// Calculate for a single champion
+				champClause = "championId=:championId";
+			}
+
+			Query query = session.createQuery("SELECT " + selectExpr + " FROM AggregatedChampionStatsEntity WHERE " + perkClause + " AND " + champClause + " AND patch=:patch");
+			// Set the parameter names (the query may not contain all parameter names, and only used ones can be set)
+			for (String paramName : query.getParameterMetadata().getNamedParameterNames()) {
+				switch (paramName) {
+					case "perkId":
+						query.setParameter("perkId", score.getPerkId());
+						break;
+					case "keystoneIds":
+						query.setParameter("keystoneIds", keystoneIds);
+						break;
+					case "championId":
+						query.setParameter("championId", score.getChampionId());
+						break;
+					case "championIds":
+						query.setParameter("championIds", championIds);
+						break;
+				}
+			}
+			query.setParameter("patch", score.getPatch());
 
 			// TODO use a better score calculation equation that also considers perk vars
 			Double winRate = (Double) query.getSingleResult();

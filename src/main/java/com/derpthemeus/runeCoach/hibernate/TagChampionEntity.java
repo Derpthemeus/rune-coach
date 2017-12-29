@@ -12,7 +12,7 @@ import java.util.Objects;
 @IdClass(TagChampionEntityPK.class)
 public class TagChampionEntity {
 	private short championId;
-	private String tagId;
+	private short tagId;
 
 	@Id
 	@Column(name = "champion_id", nullable = false)
@@ -26,11 +26,11 @@ public class TagChampionEntity {
 
 	@Id
 	@Column(name = "tag_id", nullable = false, length = 20)
-	public String getTagId() {
+	public short getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(String tagId) {
+	public void setTagId(short tagId) {
 		this.tagId = tagId;
 	}
 

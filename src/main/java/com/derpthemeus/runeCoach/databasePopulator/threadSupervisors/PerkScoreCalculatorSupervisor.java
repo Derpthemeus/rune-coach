@@ -68,19 +68,18 @@ public class PerkScoreCalculatorSupervisor extends PopulatorThreadSupervisor<Per
 					// Create a new List so it doesn't need to be reallocated multiple times as it's filled
 					scores = new ArrayList<>(perkAndStyleIds.size() * championIds.size());
 
-					for (short championId : championIds) {
-						for (short perkId : perkAndStyleIds) {
-							PerkScoreEntity score = new PerkScoreEntity();
-							score.setChampionId(championId);
-							score.setPerkId(perkId);
-							score.setPatch(patch);
-							score.setLastUpdated(new Timestamp(0));
-							score.setScore(null);
-
-							session.save(score);
-							scores.add(score);
+					List<Short> tagIds = session.createQuery("SELECT tagId FROM TagEntity").getResultList();
+					for (short perkId : perkAndStyleIds) {
+						for (short championId : championIds) {
+							scores.add(createScore(session, perkId, championId, patch));
+						}
+						for (short tagId : tagIds) {
+							// Tag IDs are negative to differentiate them from champion IDs
+							scores.add(createScore(session, perkId, (short) -tagId, patch));
 						}
 					}
+
+
 				} else {
 					// Remove scores that are already being processed
 					for (PerkScoreEntity activeScore : activeScores) {
@@ -124,5 +123,17 @@ public class PerkScoreCalculatorSupervisor extends PopulatorThreadSupervisor<Per
 		}
 
 		return ids;
+	}
+
+	private PerkScoreEntity createScore(Session session, short perkId, short championId, String patch) {
+		PerkScoreEntity score = new PerkScoreEntity();
+		score.setChampionId(championId);
+		score.setPerkId(perkId);
+		score.setPatch(patch);
+		score.setLastUpdated(new Timestamp(0));
+		score.setScore(null);
+
+		session.save(score);
+		return score;
 	}
 }
