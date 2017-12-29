@@ -7,9 +7,7 @@ import no.stelar7.api.l4j8.pojo.match.ParticipantIdentity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,14 +22,6 @@ public class SetupSeedData {
 	private static final Logger logger = LogManager.getLogger();
 
 	public static void main(String[] args) {
-		Configuration config = new Configuration()
-				.configure()
-				.setProperty("hibernate.connection.username", System.getenv("MYSQL_USERNAME"))
-				.setProperty("hibernate.connection.password", System.getenv("MYSQL_PASSWORD"));
-
-		SessionFactory sessionFactory = config.buildSessionFactory();
-
-
 		for (int seedFile = 1; seedFile <= 10; seedFile++) {
 			InputStreamReader reader;
 			try {
@@ -54,7 +44,7 @@ public class SetupSeedData {
 
 					// This will error a few times due to some summoner appearing in the seed data twice.
 					Transaction tx = null;
-					try (Session session = sessionFactory.openSession()) {
+					try (Session session = RuneCoach.getSessionFactory().openSession()) {
 						tx = session.beginTransaction();
 						session.save(summonerEntity);
 						tx.commit();

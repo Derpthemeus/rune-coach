@@ -9,6 +9,10 @@ import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAcc
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.TagStatAggregatorSupervisor;
+import no.stelar7.api.l4j8.basic.APICredentials;
+import no.stelar7.api.l4j8.impl.L4J8;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +21,10 @@ public class RuneCoach {
 
 	// How many of each PopulatorThread should be run
 	private static HashMap<PopulatorThreadSupervisor, Integer> threadCounts = new HashMap<>();
+
+
+	private static SessionFactory sessionFactory;
+	private static L4J8 l4j8;
 
 	static {
 		threadCounts.put(SummonerAccountIdUpdaterSupervisor.getInstance(), 1);
@@ -27,6 +35,16 @@ public class RuneCoach {
 		threadCounts.put(ChampionStatAggregatorSupervisor.getInstance(), 7);
 		threadCounts.put(TagStatAggregatorSupervisor.getInstance(), 4);
 		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 2);
+
+
+		l4j8 = new L4J8(new APICredentials(System.getenv("API_KEY"), null));
+		Configuration config = new Configuration()
+				.configure()
+				.setProperty("hibernate.connection.url", System.getenv("MYSQL_CONNECTION_URL"))
+				.setProperty("hibernate.connection.username", System.getenv("MYSQL_USERNAME"))
+				.setProperty("hibernate.connection.password", System.getenv("MYSQL_PASSWORD"));
+
+		sessionFactory = config.buildSessionFactory();
 	}
 
 
@@ -40,5 +58,13 @@ public class RuneCoach {
 				entry.getKey().spawnThread();
 			}
 		}
+	}
+
+	public static L4J8 getL4J8() {
+		return l4j8;
+	}
+
+	public static SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 }
