@@ -1,9 +1,10 @@
 package com.derpthemeus.runeCoach;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThreadSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.ChampionStatAggregatorSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchDownloaderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchFinderSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.ChampionStatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.PerkScoreCalculatorSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
@@ -22,9 +23,10 @@ public class RuneCoach {
 		threadCounts.put(SummonerLeagueUpdaterSupervisor.getInstance(), 1);
 		threadCounts.put(SummonerFinderSupervisor.getInstance(), 1);
 		threadCounts.put(MatchFinderSupervisor.getInstance(), 1);
-		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 10);
-		threadCounts.put(ChampionStatAggregatorSupervisor.getInstance(), 5);
-		threadCounts.put(TagStatAggregatorSupervisor.getInstance(), 3);
+		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 2);
+		threadCounts.put(ChampionStatAggregatorSupervisor.getInstance(), 7);
+		threadCounts.put(TagStatAggregatorSupervisor.getInstance(), 4);
+		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 2);
 	}
 
 
