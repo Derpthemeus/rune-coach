@@ -57,23 +57,18 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 
 			if (alternativePerkEntity.getScope() == PerkAlternativeEntity.Scope.SLOT) {
 				List<Short> slotOptions = getSlotAlternatives(alternativePerkEntity.getPerkId());
-				Query query = session.createQuery("FROM PerkScoreEntity WHERE championId=:champion AND perkId IN (:slotOptions) AND patch=:patch")
+				Query query = session.createQuery("FROM PerkScoreEntity WHERE championId=:champion AND perkId IN (:slotOptions) AND patch=:patch AND games>=75 AND score IS NOT NULL")
 						.setParameter("champion", alternativePerkEntity.getChampionId()).setParameter("patch", alternativePerkEntity.getPatch()).setParameter("slotOptions", slotOptions);
 				List<PerkScoreEntity> options = query.getResultList();
 				Optional<PerkScoreEntity> optional = options.stream().filter(score -> score.getPerkId() == alternativePerkEntity.getPerkId()).findAny();
 				if (!optional.isPresent()) {
-					// Skip for now if scores have not been calculated yet
+					// Skip for now if scores have not been calculated yet, or sample size is too small
 					return;
 				}
 
 				PerkScoreEntity original = optional.get();
-				options.sort(Comparator.comparingDouble((PerkScoreEntity score) -> {
-					if (score.getScore() == null) {
-						// Default to 0.5 if score hasn't been calculated yet
-						score.setScore(0.5);
-					}
-					return score.getScore();
-				}).reversed());
+				alternativePerkEntity.setAbsoluteScore(original.getScore());
+				options.sort(Comparator.comparingDouble(PerkScoreEntity::getScore).reversed());
 
 				// Determine if there is an alternative that is decently better than the original choice.
 				double improvement = options.get(0).getScore() - original.getScore();
@@ -97,6 +92,7 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 
 				// How the score of the original perk compares to alternatives within this scope. A positive value indicates it is better, a negative value indicates it is worse
 				double scoreDifference = original.getScore() - avgScore;
+				alternativePerkEntity.setRelativeScore(scoreDifference);
 
 				// How results should be sorted so the largest contributing factors are first
 				String sortingMethod = null;

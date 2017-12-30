@@ -24,6 +24,8 @@ public class PerkAlternativeEntity {
 	private Scope scope;
 	private Timestamp lastUpdated;
 	private double improvement;
+	private double relativeScore;
+	private Double absoluteScore;
 
 	@Id
 	@Column(name = "perk_id", nullable = false)
@@ -114,6 +116,26 @@ public class PerkAlternativeEntity {
 
 	public void setImprovement(double improvement) {
 		this.improvement = improvement;
+	}
+
+	@Basic
+	@Column(name = "relative_score", nullable = false)
+	public double getRelativeScore() {
+		return relativeScore;
+	}
+
+	public void setRelativeScore(double relativeScore) {
+		this.relativeScore = relativeScore;
+	}
+
+	@Basic
+	@Column(name = "absolute_score")
+	public Double getAbsoluteScore() {
+		return absoluteScore;
+	}
+
+	public void setAbsoluteScore(Double absoluteScore) {
+		this.absoluteScore = absoluteScore;
 	}
 
 	@Override
