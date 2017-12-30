@@ -18,6 +18,7 @@ public class PerkScoreEntity {
 	private String patch;
 	private Double score;
 	private Timestamp lastUpdated;
+	private int games;
 
 	@Id
 	@Column(name = "perk_id", nullable = false)
@@ -68,6 +69,17 @@ public class PerkScoreEntity {
 	public void setLastUpdated(Timestamp lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
+
+	@Basic
+	@Column(name = "games")
+	public int getGames() {
+		return games;
+	}
+
+	public void setGames(int games) {
+		this.games = games;
+	}
+
 
 	@Override
 	public boolean equals(Object o) {

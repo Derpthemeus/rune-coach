@@ -81,7 +81,7 @@ public class PerkScoreCalculatorThread extends PopulatorThread {
 			}
 
 			// Summing will only actually be necessary if aggregating winrate for a style or tag
-			Query query = session.createQuery("SELECT SUM(totalWins)*1.0/SUM(totalMatches) FROM AggregatedChampionStatsEntity WHERE " + perkClause + " AND " + champClause + " AND patch=:patch");
+			Query query = session.createQuery("SELECT SUM(totalWins)*1.0, CAST(SUM(totalMatches) as java.lang.Integer) FROM AggregatedChampionStatsEntity WHERE " + perkClause + " AND " + champClause + " AND patch=:patch");
 			// Set the parameter names (the query may not contain all parameter names, and only used ones can be set)
 			if (keystoneIds == null) {
 				query.setParameter("perkId", score.getPerkId());
@@ -90,10 +90,15 @@ public class PerkScoreCalculatorThread extends PopulatorThread {
 			}
 			query.setParameter("championId", score.getChampionId()).setParameter("patch", score.getPatch());
 
-			// TODO use a better score calculation equation that also considers perk vars
-			Double winRate = (Double) query.getSingleResult();
-			if (winRate != null) {
+
+			Object[] result = (Object[]) query.getSingleResult();
+			Integer gamesCounted = (Integer) result[1];
+			// gamesCounted could be null if stats have not been aggregated yet
+			if (gamesCounted != null && gamesCounted != 0) {
+				// TODO use a better score calculation equation that also considers perk vars
+				Double winRate = (Double) result[0] / gamesCounted;
 				score.setScore(winRate);
+				score.setGames(gamesCounted);
 			}
 
 			score.setLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
