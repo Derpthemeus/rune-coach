@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AlternativePerkCalculatorThread extends PopulatorThread {
@@ -59,8 +60,13 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 				Query query = session.createQuery("FROM PerkScoreEntity WHERE championId=:champion AND perkId IN (:slotOptions) AND patch=:patch")
 						.setParameter("champion", alternativePerkEntity.getChampionId()).setParameter("patch", alternativePerkEntity.getPatch()).setParameter("slotOptions", slotOptions);
 				List<PerkScoreEntity> options = query.getResultList();
+				Optional<PerkScoreEntity> optional = options.stream().filter(score -> score.getPerkId() == alternativePerkEntity.getPerkId()).findAny();
+				if (!optional.isPresent()) {
+					// Skip for now if scores have not been calculated yet
+					return;
+				}
 
-				PerkScoreEntity original = options.stream().filter(score -> score.getPerkId() == alternativePerkEntity.getPerkId()).findAny().get();
+				PerkScoreEntity original = optional.get();
 				options.sort(Comparator.comparingDouble((PerkScoreEntity score) -> {
 					if (score.getScore() == null) {
 						// Default to 0.5 if score hasn't been calculated yet
@@ -103,14 +109,14 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 
 				// If the score difference is large enough to matter, determine what caused it
 				if (sortingMethod != null) {
-					Query tagScoresQuery = session.createQuery("FROM PerkScoreEntity WHERE championId IN (SELECT tagId FROM TagChampionEntity WHERE championId=:champion) AND perkId=:perkId AND score IS NOT NULL ORDER BY score " + sortingMethod)
+					Query tagScoresQuery = session.createQuery("FROM PerkScoreEntity WHERE -championId IN (SELECT tagId FROM TagChampionEntity WHERE championId=:champion) AND perkId=:perkId AND score IS NOT NULL ORDER BY score " + sortingMethod)
 							.setParameter("champion", alternativePerkEntity.getChampionId()).setParameter("perkId", alternativePerkEntity.getPerkId());
 					List<PerkScoreEntity> tagAverageScores = tagScoresQuery.setMaxResults(2).getResultList();
 					// Only use the tags as reasons if they have a significant enough impact on score
 					if (tagAverageScores.size() > 0 && Math.abs(tagAverageScores.get(0).getScore() - 0.5) > 0.015) {
-						alternativePerkEntity.setReason1(tagAverageScores.get(0).getPerkId());
+						alternativePerkEntity.setReason1((short) -tagAverageScores.get(0).getChampionId());
 						if (tagAverageScores.size() > 1 && Math.abs(tagAverageScores.get(1).getScore() - 0.5) > 0.015) {
-							alternativePerkEntity.setReason2(tagAverageScores.get(1).getPerkId());
+							alternativePerkEntity.setReason2((short) -tagAverageScores.get(1).getChampionId());
 						}
 					}
 				} else if (alternativePerkEntity.getScope() == PerkAlternativeEntity.Scope.SUBSTYLE) {
