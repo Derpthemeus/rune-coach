@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// TODO add support for reasons being tags that perks are exclusively good on (perk X is generally only good on Y or Z champions)
 public class AlternativePerkCalculatorThread extends PopulatorThread {
 
 	private PerkAlternativeEntity alternativePerkEntity;
@@ -67,9 +68,18 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 				}
 
 				PerkScoreEntity original = optional.get();
-				alternativePerkEntity.setAbsoluteScore(original.getScore());
-				options.sort(Comparator.comparingDouble(PerkScoreEntity::getScore).reversed());
 
+				// TODO this should really be calculated elsewhere - it is redundant if calculated here across multiple contexts
+				// Get the average winrate for this rune and this champion
+				Query expectedWinrateQuery = session.createQuery("SELECT SUM(score*games)/SUM(games) FROM PerkScoreEntity WHERE (perkId=:perk OR championId=:championId) AND patch=:patch")
+						.setParameter("perk", alternativePerkEntity.getPerkId()).setParameter("championId", alternativePerkEntity.getChampionId()).setParameter("patch", alternativePerkEntity.getPatch());
+
+				double expectedWinrate = (double) expectedWinrateQuery.getSingleResult();
+				// Absolute score is relative to average winrates for this champion and rune, but absolute compared to other runes
+				alternativePerkEntity.setAbsoluteScore(original.getScore() - expectedWinrate);
+
+
+				options.sort(Comparator.comparingDouble(PerkScoreEntity::getScore).reversed());
 				// Determine if there is an alternative that is decently better than the original choice.
 				double improvement = options.get(0).getScore() - original.getScore();
 				// Suggest an alternative, if there is an option that is decently better
@@ -105,8 +115,8 @@ public class AlternativePerkCalculatorThread extends PopulatorThread {
 
 				// If the score difference is large enough to matter, determine what caused it
 				if (sortingMethod != null) {
-					Query tagScoresQuery = session.createQuery("FROM PerkScoreEntity WHERE -championId IN (SELECT tagId FROM TagChampionEntity WHERE championId=:champion) AND perkId=:perkId AND score IS NOT NULL ORDER BY score " + sortingMethod)
-							.setParameter("champion", alternativePerkEntity.getChampionId()).setParameter("perkId", alternativePerkEntity.getPerkId());
+					Query tagScoresQuery = session.createQuery("FROM PerkScoreEntity WHERE -championId IN (SELECT tagId FROM TagChampionEntity WHERE championId=:champion) AND perkId=:perkId AND score IS NOT NULL AND patch=:patch ORDER BY score " + sortingMethod)
+							.setParameter("champion", alternativePerkEntity.getChampionId()).setParameter("perkId", alternativePerkEntity.getPerkId()).setParameter("patch", alternativePerkEntity.getPatch());
 					List<PerkScoreEntity> tagAverageScores = tagScoresQuery.setMaxResults(2).getResultList();
 					// Only use the tags as reasons if they have a significant enough impact on score
 					if (tagAverageScores.size() > 0 && Math.abs(tagAverageScores.get(0).getScore() - 0.5) > 0.015) {
