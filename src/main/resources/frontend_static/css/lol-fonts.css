@@ -1,0 +1,151 @@
+/* Beaufort for LOL Bold */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Boldd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Boldd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Bold.woff") format("woff"), url("../fonts/BeaufortforLOL-Bold.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Bold.svg#") format("svg");
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Bold";
+	src: url("../fonts/BeaufortforLOL-Boldd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Boldd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Bold.woff") format("woff"), url("../fonts/BeaufortforLOL-Bold.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Bold.svg#") format("svg");
+}
+
+/* Beaufort for LOL Bold Italic */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-BoldItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-BoldItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-BoldItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-BoldItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-BoldItalic.svg#") format("svg");
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-BoldItalic";
+	src: url("../fonts/BeaufortforLOL-BoldItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-BoldItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-BoldItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-BoldItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-BoldItalic.svg#") format("svg");
+}
+
+/* Beaufort for LOL Heavy */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Heavyd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Heavyd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Heavy.woff") format("woff"), url("../fonts/BeaufortforLOL-Heavy.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Heavy.svg#") format("svg");
+	font-weight: 800;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Heavy";
+	src: url("../fonts/BeaufortforLOL-Heavyd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Heavyd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Heavy.woff") format("woff"), url("../fonts/BeaufortforLOL-Heavy.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Heavy.svg#") format("svg");
+}
+
+/* Beaufort for LOL Heavy Italic */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-HeavyItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-HeavyItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-HeavyItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-HeavyItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-HeavyItalic.svg#") format("svg");
+	font-weight: 800;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-HeavyItalic";
+	src: url("../fonts/BeaufortforLOL-HeavyItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-HeavyItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-HeavyItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-HeavyItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-HeavyItalic.svg#") format("svg");
+}
+
+/* Beaufort for LOL Italic */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Italicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Italicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Italic.woff") format("woff"), url("../fonts/BeaufortforLOL-Italic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Italic.svg#") format("svg");
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Italic";
+	src: url("../fonts/BeaufortforLOL-Italicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Italicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Italic.woff") format("woff"), url("../fonts/BeaufortforLOL-Italic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Italic.svg#") format("svg");
+}
+
+/* Beaufort for LOL Light */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Lightd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Lightd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Light.woff") format("woff"), url("../fonts/BeaufortforLOL-Light.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Light.svg#") format("svg");
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Light";
+	src: url("../fonts/BeaufortforLOL-Lightd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Lightd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Light.woff") format("woff"), url("../fonts/BeaufortforLOL-Light.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Light.svg#") format("svg");
+}
+
+/* Beaufort for LOL Light Italic */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-LightItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-LightItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-LightItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-LightItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-LightItalic.svg#") format("svg");
+	font-weight: 200;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-LightItalic";
+	src: url("../fonts/BeaufortforLOL-LightItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-LightItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-LightItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-LightItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-LightItalic.svg#") format("svg");
+}
+
+/* Beaufort for LOL Medium */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Mediumd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Mediumd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Medium.woff") format("woff"), url("../fonts/BeaufortforLOL-Medium.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Medium.svg#") format("svg");
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Medium";
+	src: url("../fonts/BeaufortforLOL-Mediumd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Mediumd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Medium.woff") format("woff"), url("../fonts/BeaufortforLOL-Medium.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Medium.svg#") format("svg");
+}
+
+/* Beaufort for LOL Medium Italic */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-MediumItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-MediumItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-MediumItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-MediumItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-MediumItalic.svg#") format("svg");
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-MediumItalic";
+	src: url("../fonts/BeaufortforLOL-MediumItalicd41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-MediumItalicd41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-MediumItalic.woff") format("woff"), url("../fonts/BeaufortforLOL-MediumItalic.ttf") format("truetype"), url("../fonts/BeaufortforLOL-MediumItalic.svg#") format("svg");
+}
+
+/* Beaufort for LOL Regular */
+@font-face {
+	font-family: "Beaufort for LOL";
+	src: url("../fonts/BeaufortforLOL-Regulard41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Regulard41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Regular.woff") format("woff"), url("../fonts/BeaufortforLOL-Regular.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Regular.svg#") format("svg");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "BeaufortforLOL-Regular";
+	src: url("../fonts/BeaufortforLOL-Regulard41d.eot?#iefix");
+	src: url("../fonts/BeaufortforLOL-Regulard41d.eot?#iefix") format("eot"), url("../fonts/BeaufortforLOL-Regular.woff") format("woff"), url("../fonts/BeaufortforLOL-Regular.ttf") format("truetype"), url("../fonts/BeaufortforLOL-Regular.svg#") format("svg");
+}
+
+

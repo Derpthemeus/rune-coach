@@ -15,11 +15,9 @@
 		<mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantPerkEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.ParticipantEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.SummonerEntity"/>
-		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedChampionStatsEntity"/>
-		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedTagStatsEntity"/>
+		<mapping class="com.derpthemeus.runeCoach.hibernate.AggregatedStatsEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.TagEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.TagChampionEntity"/>
 		<mapping class="com.derpthemeus.runeCoach.hibernate.PerkScoreEntity"/>
-		<mapping class="com.derpthemeus.runeCoach.hibernate.PerkAlternativeEntity"/>
 	</session-factory>
 </hibernate-configuration>

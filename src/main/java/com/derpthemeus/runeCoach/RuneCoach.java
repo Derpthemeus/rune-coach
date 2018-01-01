@@ -8,6 +8,7 @@ import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.StatAggrega
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
+import com.derpthemeus.runeCoach.jetty.RuneCoachWebServer;
 import no.stelar7.api.l4j8.basic.APICredentials;
 import no.stelar7.api.l4j8.impl.L4J8;
 import org.hibernate.SessionFactory;
@@ -32,7 +33,7 @@ public class RuneCoach {
 		threadCounts.put(MatchFinderSupervisor.getInstance(), 1);
 		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 1);
 		threadCounts.put(StatAggregatorSupervisor.getInstance(), 3);
-		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 6);
+		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 7);
 
 		l4j8 = new L4J8(new APICredentials(System.getenv("API_KEY"), null));
 		Configuration config = new Configuration()
@@ -45,7 +46,9 @@ public class RuneCoach {
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		int port = Integer.parseInt(System.getenv("HTTP_PORT"));
+		new RuneCoachWebServer(port);
 		startDatabasePopulators();
 	}
 

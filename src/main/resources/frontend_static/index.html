@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- This is a modified version of a minified file from https://na.leagueoflegends.com/en/featured/preseason-update#builder -->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>RuneCoach</title>
+	<link rel="stylesheet" href="./css/lol-fonts.css">
+	<link rel="stylesheet" href="./css/rune-builder.css">
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="shortcut icon" href="/img/logo-icon.png">
+	<script>
+		var base = document.createElement('a');
+		base.href = location.href.replace(/\#.*$/, '');
+	</script>
+</head>
+
+<body class="i18n-en_US">
+<script>
+	window.dataLayer = [];
+
+</script>
+<div class="o-wrap">
+	<div class="o-inset o-inset--runebuilder">
+		<div>
+			RuneCoach helps you build rune pages by trying to explain why individual runes do or don't work well on
+			individual champions.
+			Select a champion to get started, then check the tooltips in the rune builder for information about each
+			rune.
+		</div>
+		<div class="champion-list-header">
+			<div class="header-title">
+				<h1>RuneCoach</h1>
+			</div>
+			<h1>Select a Champion</h1>
+		</div>
+		<div id="champion-list"></div>
+		<div id="app-header">
+			<h1>Choose your Runes</h1>
+		</div>
+		<div id="app" class="u-spacing-20"></div>
+		<div class="faq">
+			<!-- TODO -->
+			<h1>About RuneCoach</h1>
+			<p>This is where stuff goes</p>
+			<h2>FAQ</h2>
+			<h3>Question #1</h3>
+			<p>Answer to Q1</p>
+			<h3>Question #2</h3>
+			<p>Answer</p>
+		</div>
+		<footer class="foot">
+			<p>
+				RuneCoach isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone
+				officially involved in producing or managing League of Legends. League of Legends and Riot Games are
+				trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+			</p>
+		</footer>
+	</div>
+</div>
+<script>
+	var language = 'en';
+	var environment = 'prod';
+	var versionedAssetPath = '.';
+	var appLanguage = language;
+
+	function getUrlParameter(name) {
+		name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+		var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+		var results = regex.exec(location.search);
+		return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	};
+	var runeBuilderConfig = getUrlParameter('build') || undefined;
+	var i18n = {
+		runebuilder: {
+			reset: "Reset",
+			toggle: "Toggle",
+			secondary: {
+				selectSecondary: "Select Secondary",
+			},
+			selectRune: "Select Rune",
+			selectGreater: "Select Greater Rune",
+			selectKeystone: "Select Keystone",
+			splash: {
+				title: "SPLASH",
+				body: "Select your secondary path above to choose runes",
+			},
+			showDetailedDescriptions: "Show detailed descriptions during comparison (or hold SHIFT)"
+		}
+	};
+
+
+</script>
+<script defer src="./js/vendor.js"></script>
+<script defer src="./js/script.js"></script>
+<script defer src="./js/main.js"></script>
+<script defer src="./js/runeBuilder.js"></script>
+</body>
+
+</html>

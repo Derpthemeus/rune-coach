@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.sql.Timestamp;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,7 @@ public class StatAggregatorSupervisor extends PopulatorThreadSupervisor<StatAggr
 							stat.setChampionId(championId);
 							stat.setPerkId(perkId);
 							stat.setPatch(patch);
+							stat.setLastUpdated(new Timestamp(0));
 
 							session.save(stat);
 							stats.add(stat);
