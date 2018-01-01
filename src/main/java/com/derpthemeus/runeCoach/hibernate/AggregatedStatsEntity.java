@@ -2,19 +2,27 @@ package com.derpthemeus.runeCoach.hibernate;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.util.Objects;
 
-@MappedSuperclass
+@Entity
+@Table(name = "aggregated_stats", schema = "rune_coach")
+@IdClass(AggregatedStatsEntityPK.class)
 public class AggregatedStatsEntity {
-
-	protected short perkId;
-	protected String patch;
-	protected long var1Total;
-	protected long var2Total;
-	protected long var3Total;
-	protected long totalMatches;
-	protected long totalWins;
+	private short perkId;
+	private short championId;
+	private String patch;
+	private long totalMatches;
+	private long totalWins;
+	private long var1Total;
+	private long var2Total;
+	private long var3Total;
+	private long lastPlayerId;
+	private Timestamp lastUpdated;
 
 	@Id
 	@Column(name = "perk_id", nullable = false)
@@ -27,6 +35,16 @@ public class AggregatedStatsEntity {
 	}
 
 	@Id
+	@Column(name = "champion_id", nullable = false)
+	public short getChampionId() {
+		return championId;
+	}
+
+	public void setChampionId(short championId) {
+		this.championId = championId;
+	}
+
+	@Id
 	@Column(name = "patch", nullable = false, length = 8)
 	public String getPatch() {
 		return patch;
@@ -34,6 +52,26 @@ public class AggregatedStatsEntity {
 
 	public void setPatch(String patch) {
 		this.patch = patch;
+	}
+
+	@Basic
+	@Column(name = "total_matches", nullable = false)
+	public long getTotalMatches() {
+		return totalMatches;
+	}
+
+	public void setTotalMatches(long totalMatches) {
+		this.totalMatches = totalMatches;
+	}
+
+	@Basic
+	@Column(name = "total_wins", nullable = false)
+	public long getTotalWins() {
+		return totalWins;
+	}
+
+	public void setTotalWins(long totalWins) {
+		this.totalWins = totalWins;
 	}
 
 	@Basic
@@ -67,23 +105,43 @@ public class AggregatedStatsEntity {
 	}
 
 	@Basic
-	@Column(name = "total_matches", nullable = false)
-	public long getTotalMatches() {
-		return totalMatches;
+	@Column(name = "last_player_id", nullable = false)
+	public long getLastPlayerId() {
+		return lastPlayerId;
 	}
 
-	public void setTotalMatches(long totalMatches) {
-		this.totalMatches = totalMatches;
+	public void setLastPlayerId(long lastPlayerId) {
+		this.lastPlayerId = lastPlayerId;
 	}
 
 	@Basic
-	@Column(name = "total_wins", nullable = false)
-	public long getTotalWins() {
-		return totalWins;
+	@Column(name = "last_updated", nullable = false)
+	public Timestamp getLastUpdated() {
+		return lastUpdated;
 	}
 
-	public void setTotalWins(long totalWins) {
-		this.totalWins = totalWins;
+	public void setLastUpdated(Timestamp lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AggregatedStatsEntity that = (AggregatedStatsEntity) o;
+		return championId == that.championId &&
+				perkId == that.perkId &&
+				var1Total == that.var1Total &&
+				var2Total == that.var2Total &&
+				var3Total == that.var3Total &&
+				lastPlayerId == that.lastPlayerId &&
+				totalMatches == that.totalMatches &&
+				Objects.equals(patch, that.patch);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(championId, perkId, patch, var1Total, var2Total, var3Total, lastPlayerId, totalMatches);
+	}
 }

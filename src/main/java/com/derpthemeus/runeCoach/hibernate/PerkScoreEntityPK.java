@@ -1,6 +1,8 @@
 package com.derpthemeus.runeCoach.hibernate;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,6 +11,7 @@ public class PerkScoreEntityPK implements Serializable {
 	private short perkId;
 	private short championId;
 	private String patch;
+	private PerkScoreEntity.ScoreType scoreType;
 
 	@Column(name = "perk_id", nullable = false)
 	@Id
@@ -40,6 +43,18 @@ public class PerkScoreEntityPK implements Serializable {
 		this.patch = patch;
 	}
 
+	@Column(name = "score_type", nullable = false)
+	@Id
+	@Enumerated(EnumType.STRING)
+	public PerkScoreEntity.ScoreType getScoreType() {
+		return scoreType;
+	}
+
+	public void setScoreType(PerkScoreEntity.ScoreType scoreType) {
+		this.scoreType = scoreType;
+	}
+
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -47,12 +62,12 @@ public class PerkScoreEntityPK implements Serializable {
 		PerkScoreEntityPK that = (PerkScoreEntityPK) o;
 		return perkId == that.perkId &&
 				championId == that.championId &&
-				Objects.equals(patch, that.patch);
+				Objects.equals(patch, that.patch) &&
+				scoreType == that.scoreType;
 	}
 
 	@Override
 	public int hashCode() {
-
-		return Objects.hash(perkId, championId, patch);
+		return Objects.hash(perkId, championId, patch, scoreType);
 	}
 }

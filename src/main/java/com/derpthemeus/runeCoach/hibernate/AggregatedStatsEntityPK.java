@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AggregatedChampionStatsEntityPK implements Serializable {
+public class AggregatedStatsEntityPK implements Serializable {
 	private short championId;
 	private short perkId;
 	private String patch;
@@ -44,7 +44,7 @@ public class AggregatedChampionStatsEntityPK implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AggregatedChampionStatsEntityPK that = (AggregatedChampionStatsEntityPK) o;
+		AggregatedStatsEntityPK that = (AggregatedStatsEntityPK) o;
 		return championId == that.championId &&
 				perkId == that.perkId &&
 				Objects.equals(patch, that.patch);

@@ -1,9 +1,13 @@
 package com.derpthemeus.runeCoach;
 
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThreadSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.ChampionStatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchDownloaderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.MatchFinderSupervisor;
 import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.PerkScoreCalculatorSupervisor;
-import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.TagStatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.StatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerAccountIdUpdaterSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerFinderSupervisor;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.SummonerLeagueUpdaterSupervisor;
 import no.stelar7.api.l4j8.basic.APICredentials;
 import no.stelar7.api.l4j8.impl.L4J8;
 import org.hibernate.SessionFactory;
@@ -22,16 +26,13 @@ public class RuneCoach {
 	private static L4J8 l4j8;
 
 	static {
-		//threadCounts.put(SummonerAccountIdUpdaterSupervisor.getInstance(), 1);
-		//threadCounts.put(SummonerLeagueUpdaterSupervisor.getInstance(), 1);
-		//threadCounts.put(SummonerFinderSupervisor.getInstance(), 1);
-		//threadCounts.put(MatchFinderSupervisor.getInstance(), 1);
-		//threadCounts.put(MatchDownloaderSupervisor.getInstance(), 1);
-		threadCounts.put(ChampionStatAggregatorSupervisor.getInstance(), 12);
-		threadCounts.put(TagStatAggregatorSupervisor.getInstance(), 5);
-		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 1);
-		// threadCounts.put(AlternativePerkCalculatorSupervisor.getInstance(), 1);
-
+		threadCounts.put(SummonerAccountIdUpdaterSupervisor.getInstance(), 1);
+		threadCounts.put(SummonerLeagueUpdaterSupervisor.getInstance(), 1);
+		threadCounts.put(SummonerFinderSupervisor.getInstance(), 1);
+		threadCounts.put(MatchFinderSupervisor.getInstance(), 1);
+		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 1);
+		threadCounts.put(StatAggregatorSupervisor.getInstance(), 3);
+		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 6);
 
 		l4j8 = new L4J8(new APICredentials(System.getenv("API_KEY"), null));
 		Configuration config = new Configuration()

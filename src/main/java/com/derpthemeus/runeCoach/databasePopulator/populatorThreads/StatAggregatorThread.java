@@ -2,17 +2,19 @@ package com.derpthemeus.runeCoach.databasePopulator.populatorThreads;
 
 import com.derpthemeus.runeCoach.DDragonManager;
 import com.derpthemeus.runeCoach.databasePopulator.PopulatorThread;
-import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.ChampionStatAggregatorSupervisor;
-import com.derpthemeus.runeCoach.hibernate.AggregatedChampionStatsEntity;
+import com.derpthemeus.runeCoach.databasePopulator.threadSupervisors.StatAggregatorSupervisor;
+import com.derpthemeus.runeCoach.hibernate.AggregatedStatsEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
-public class ChampionStatAggregatorThread extends PopulatorThread {
+public class StatAggregatorThread extends PopulatorThread {
 
-	private AggregatedChampionStatsEntity stat;
+	private AggregatedStatsEntity stat;
 	// The LoL patch (e.g. "7.24") that this thread is aggregating stats for
 	private String patch;
 
@@ -45,16 +47,25 @@ public class ChampionStatAggregatorThread extends PopulatorThread {
 			tx = session.beginTransaction();
 			// TODO lock `stat`?
 
-			Query query = session.createQuery(
-					"SELECT COUNT(*),SUM(perk.var1),SUM(perk.var2),SUM(perk.var3),SUM(CASE WHEN participant.winner=TRUE THEN 1 ELSE 0 END),MAX(perk.playerId)" +
-							" FROM ParticipantPerkEntity AS perk INNER JOIN ParticipantEntity AS participant ON participant.playerId=perk.playerId INNER JOIN MatchEntity AS game ON game.matchId=participant.matchId" +
-							" WHERE participant.championId=:champId AND perk.perkId=:perkId AND game.patch=:patch AND participant.playerId>:lastPlayerId"
-			).setParameter("perkId", stat.getPerkId()).setParameter("champId", stat.getChampionId()).setParameter("patch", stat.getPatch()).setParameter("lastPlayerId", stat.getLastPlayerId());
-			Object[] result = (Object[]) query.getSingleResult();
+			Query query;
+			if (stat.getChampionId() > 0) {
+				// Aggregate stats for a single champion
+				query = session.createQuery(
+						"SELECT COUNT(*),SUM(perk.var1),SUM(perk.var2),SUM(perk.var3),SUM(CASE WHEN participant.winner=TRUE THEN 1 ELSE 0 END),MAX(perk.playerId)" +
+								" FROM ParticipantPerkEntity AS perk INNER JOIN ParticipantEntity AS participant ON participant.playerId=perk.playerId INNER JOIN MatchEntity AS game ON game.matchId=participant.matchId" +
+								" WHERE participant.championId=:champId AND perk.perkId=:perkId AND game.patch=:patch AND participant.playerId>:lastPlayerId"
+				).setParameter("perkId", stat.getPerkId()).setParameter("champId", stat.getChampionId()).setParameter("patch", stat.getPatch()).setParameter("lastPlayerId", stat.getLastPlayerId());
+			} else {
+				// Aggregate stats for a tag
+				query = session.createQuery("SELECT CAST(SUM(totalMatches) AS java.lang.Long),SUM(var1Total),SUM(var2Total),SUM(var3Total),SUM(totalWins),CAST(0 AS java.lang.Long) FROM AggregatedStatsEntity" +
+						" WHERE championId IN (SELECT championId FROM TagChampionEntity WHERE -tagId=:championId) AND perkId=:perkId AND patch=:patch"
+				).setParameter("perkId", stat.getPerkId()).setParameter("championId", stat.getChampionId()).setParameter("patch", stat.getPatch());
+			}
 
-			long count = (long) result[0];
+			Object[] result = (Object[]) query.getSingleResult();
+			Long count = (Long) result[0];
 			// The values for `SUM` and `MAX` columns will be `null` if `count` is 0
-			if (count > 0) {
+			if (count != null && count > 0) {
 				stat.setTotalMatches(stat.getTotalMatches() + count);
 				stat.setVar1Total(stat.getVar1Total() + (long) result[1]);
 				stat.setVar2Total(stat.getVar2Total() + (long) result[2]);
@@ -63,9 +74,10 @@ public class ChampionStatAggregatorThread extends PopulatorThread {
 				stat.setTotalWins(stat.getTotalWins() + (long) result[4]);
 				stat.setLastPlayerId((long) result[5]);
 
-				session.update(stat);
 			}
+			stat.setLastUpdated(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
+			session.update(stat);
 			tx.commit();
 		} catch (Exception ex) {
 			if (tx != null) {
@@ -77,11 +89,11 @@ public class ChampionStatAggregatorThread extends PopulatorThread {
 	}
 
 	@Override
-	public ChampionStatAggregatorSupervisor getSupervisor() {
-		return ChampionStatAggregatorSupervisor.getInstance();
+	public StatAggregatorSupervisor getSupervisor() {
+		return StatAggregatorSupervisor.getInstance();
 	}
 
-	public AggregatedChampionStatsEntity getActiveStat() {
+	public AggregatedStatsEntity getActiveStat() {
 		return this.stat;
 	}
 

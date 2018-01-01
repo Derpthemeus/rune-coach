@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -42,15 +41,7 @@ public class PerkScoreCalculatorSupervisor extends PopulatorThreadSupervisor<Per
 
 		// Refill the queue by querying the database
 		if (scoresToAggregate.isEmpty()) {
-			List<PerkScoreEntity> activeScores = getRunningThreads().stream().map(
-					thread -> {
-						if (thread.getActiveScore() != null) {
-							return thread.getActiveScore();
-						} else {
-							return null;
-						}
-					}
-			).filter(Objects::nonNull).collect(Collectors.toList());
+			List<PerkScoreEntity> activeScores = getRunningThreads().stream().map(PerkScoreCalculatorThread::getActiveScore).filter(Objects::nonNull).collect(Collectors.toList());
 
 			Transaction tx = null;
 			try (Session session = getSessionFactory().openSession()) {
@@ -62,28 +53,40 @@ public class PerkScoreCalculatorSupervisor extends PopulatorThreadSupervisor<Per
 				if (scores.isEmpty()) {
 					// Create scores for the patch if they haven't been created yet
 					String ddragonVersion = DDragonManager.getLongVersion(patch);
-					List<Short> championIds = getChampionIds(ddragonVersion);
-					List<Short> perkAndStyleIds = getPerkAndStyleIds(ddragonVersion);
+					List<Short> championAndTagIds = DDragonManager.getChampionIds(ddragonVersion);
+					championAndTagIds.addAll(session.createQuery("SELECT -tagId FROM TagEntity").getResultList());
+					List<Short> perkAndStyleIds = DDragonManager.getPerkAndStyleIds(ddragonVersion);
+					List<Short> perkIds = DDragonManager.getPerkIds(ddragonVersion);
 
 					// Create a new List so it doesn't need to be reallocated multiple times as it's filled
-					scores = new ArrayList<>(perkAndStyleIds.size() * championIds.size());
+					scores = new ArrayList<>(championAndTagIds.size() * (2 * perkAndStyleIds.size() + perkIds.size()));
 
-					List<Short> tagIds = session.createQuery("SELECT tagId FROM TagEntity").getResultList();
-					for (short perkId : perkAndStyleIds) {
-						for (short championId : championIds) {
-							scores.add(createScore(session, perkId, championId, patch));
-						}
-						for (short tagId : tagIds) {
-							// Tag IDs are negative to differentiate them from champion IDs
-							scores.add(createScore(session, perkId, (short) -tagId, patch));
+					// Setup RAW and RELATIVE
+					for (PerkScoreEntity.ScoreType scoreType : new PerkScoreEntity.ScoreType[]{PerkScoreEntity.ScoreType.RAW, PerkScoreEntity.ScoreType.RELATIVE}) {
+						for (short perkId : perkAndStyleIds) {
+							for (short championId : championAndTagIds) {
+								scores.add(createScore(session, perkId, championId, scoreType, patch));
+							}
 						}
 					}
 
+					// Setup SLOT
+					for (short perkId : perkIds) {
+						for (short championId : championAndTagIds) {
+							scores.add(createScore(session, perkId, championId, PerkScoreEntity.ScoreType.SLOT, patch));
+						}
+					}
 
+					// TODO add support for ScoreType.SUBSTYLE
 				} else {
 					// Remove scores that are already being processed
 					for (PerkScoreEntity activeScore : activeScores) {
-						scores.removeIf(score -> score.getPerkId() == activeScore.getPerkId() && score.getChampionId() == activeScore.getChampionId());
+						scores.removeIf(score ->
+								score.getPerkId() == activeScore.getPerkId()
+										&& score.getChampionId() == activeScore.getChampionId()
+										&& score.getScoreType() == activeScore.getScoreType()
+										&& score.getPatch().equals(activeScore.getPatch())
+						);
 					}
 				}
 				tx.commit();
@@ -98,37 +101,12 @@ public class PerkScoreCalculatorSupervisor extends PopulatorThreadSupervisor<Per
 		return scoresToAggregate.poll();
 	}
 
-	/**
-	 * Gets the IDs of all available champions for a certain DDragon version
-	 */
-	private List<Short> getChampionIds(String ddragonVersion) throws IOException {
-		return DDragonManager.getChampionList(ddragonVersion).data.values().stream().map(champion -> Short.parseShort(champion.key)).collect(Collectors.toList());
-	}
-
-
-	/**
-	 * Gets the IDs of all available perks and styles for a certain DDragon version
-	 */
-	private List<Short> getPerkAndStyleIds(String ddragonVersion) throws IOException {
-		List<Short> ids = new ArrayList<>();
-
-		DDragonManager.StyleInfo[] styles = DDragonManager.getRuneInfo(ddragonVersion);
-		for (DDragonManager.StyleInfo style : styles) {
-			ids.add(style.id);
-			for (DDragonManager.StyleInfo.SlotInfo slot : style.slots) {
-				for (DDragonManager.StyleInfo.Rune rune : slot.runes) {
-					ids.add(rune.id);
-				}
-			}
-		}
-
-		return ids;
-	}
-
-	private PerkScoreEntity createScore(Session session, short perkId, short championId, String patch) {
+	private PerkScoreEntity createScore(Session session, short perkId, short championId, PerkScoreEntity.ScoreType scoreType, String patch) {
 		PerkScoreEntity score = new PerkScoreEntity();
+
 		score.setChampionId(championId);
 		score.setPerkId(perkId);
+		score.setScoreType(scoreType);
 		score.setPatch(patch);
 		score.setLastUpdated(new Timestamp(0));
 		score.setScore(null);
