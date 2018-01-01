@@ -30,10 +30,10 @@ public class RuneCoach {
 		threadCounts.put(SummonerAccountIdUpdaterSupervisor.getInstance(), 1);
 		threadCounts.put(SummonerLeagueUpdaterSupervisor.getInstance(), 1);
 		threadCounts.put(SummonerFinderSupervisor.getInstance(), 1);
-		threadCounts.put(MatchFinderSupervisor.getInstance(), 1);
-		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 1);
+		threadCounts.put(MatchFinderSupervisor.getInstance(), 2);
+		threadCounts.put(MatchDownloaderSupervisor.getInstance(), 6);
 		threadCounts.put(StatAggregatorSupervisor.getInstance(), 3);
-		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 7);
+		threadCounts.put(PerkScoreCalculatorSupervisor.getInstance(), 3);
 
 		l4j8 = new L4J8(new APICredentials(System.getenv("API_KEY"), null));
 		Configuration config = new Configuration()
