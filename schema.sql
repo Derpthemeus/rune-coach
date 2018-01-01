@@ -175,4 +175,4 @@ INSERT INTO patches (patch, start_date) VALUES ('7.22', '2017-11-08 11:04:00');
 INSERT INTO patches (patch, start_date) VALUES ('7.23', '2017-11-21 12:17:00');
 INSERT INTO patches (patch, start_date) VALUES ('7.24', '2017-12-06 11:58:00');
 
-INSERT INTO summoners (summoner_id) VALUES ();
+INSERT INTO summoners (summoner_id) VALUES (41271279);
