@@ -93,32 +93,29 @@ function setChampion(championId) {
 }
 
 function getRuneTooltip(rune) {
-	if (!currentPerformanceInfo) {
-		return "<b>Select a champion to view information about this rune on them</b>";
-	}
-
-	let tooltip = "";
-
 	let runeName = `<span class="tooltip-runeName">${rune.name}</span>`;
-	let championName = `<span class="tooltip-championName">${selectedChampion.name}</span>`;
+	let tooltip = "";
+	if (currentPerformanceInfo) {
+		let championName = `<span class="tooltip-championName">${selectedChampion.name}</span>`;
+		// Yes, the absolute score is called relative. ty spaghetti code.
+		let absoluteScore = currentPerformanceInfo["RELATIVE"][rune.runeId];
+		let relativeScore = currentPerformanceInfo["SLOT"][rune.runeId];
 
-	// Yes, the absolute score is called relative. ty spaghetti code.
-	let absoluteScore = currentPerformanceInfo["RELATIVE"][rune.runeId];
-	let relativeScore = currentPerformanceInfo["SLOT"][rune.runeId];
+		if (relativeScore) {
+			let relativeRating = `<span class="tooltip-performance">${relativeScore.score < -0.015 ? "weak" : (relativeScore.score > 0.015) ? "strong" : "average"}</span>`;
+			tooltip += `<b>Relative to other runes in this slot, ${runeName} is ${relativeRating} on ${championName}.<br><br>`;
+		}
 
+		if (absoluteScore) {
+			let absoluteRating = `<span class="tooltip-performance">${absoluteScore.score < -0.015 ? "weak" : (absoluteScore.score > 0.015) ? "strong" : "average"}</span>`;
+			tooltip += `Overall, ${runeName} is ${absoluteRating} on ${championName}.`;
+		}
 
-	if (relativeScore) {
-		let relativeRating = `<span class="tooltip-performance">${relativeScore.score < -0.015 ? "weak" : (relativeScore.score > 0.015) ? "strong" : "average"}</span>`;
-		tooltip += `<b>Relative to other runes in this slot, ${runeName} is ${relativeRating} on ${championName}.<br><br>`;
-	}
-
-	if (absoluteScore) {
-		let absoluteRating = `<span class="tooltip-performance">${absoluteScore.score < -0.015 ? "weak" : (absoluteScore.score > 0.015) ? "strong" : "average"}</span>`;
-		tooltip += `Overall, ${runeName} is ${absoluteRating} on ${championName}.`;
-	}
-
-	if (!absoluteScore && !relativeScore) {
-		tooltip += "No data about this rune on this champion is available";
+		if (!absoluteScore && !relativeScore) {
+			tooltip += "No data about this rune on this champion is available";
+		}
+	} else {
+		tooltip += "<b>Select a champion to view information about this rune on them</b>";
 	}
 
 	if (bestTagsByRune[rune.runeId]) {
