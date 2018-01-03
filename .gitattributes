@@ -1,0 +1,5 @@
+src/main/resources/frontend_static/js/vendor.js linguist-vendored
+src/main/resources/frontend_static/js/main.js linguist-vendored
+src/main/resources/frontend_static/js/runeBuilder.js linguist-vendored
+src/main/resources/frontend_static/css/rune-builder.css linguist-vendored
+src/main/resources/frontend_static/css/lol-fonts.css linguist-vendored
